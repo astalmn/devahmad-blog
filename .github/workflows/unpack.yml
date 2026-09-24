@@ -1,0 +1,23 @@
+name: Extract DevAhmad
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract project
+        run: |
+          ZIP=$(find . -maxdepth 1 -iname '*.zip' -print -quit)
+          test -n "$ZIP" || { echo 'ZIP file not found'; exit 1; }
+          mkdir -p /tmp/devahmad-extract
+          unzip -q "$ZIP" -d /tmp/devahmad-extract
+          cp -a /tmp/devahmad-extract/devahmad/. ./
+          git rm -- "$ZIP"
+          git add -A
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Extract complete DevAhmad project'
+          git push
