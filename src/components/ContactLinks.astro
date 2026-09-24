@@ -1,0 +1,162 @@
+
+---
+interface Props {
+  lang?: 'ar' | 'en';
+}
+
+const { lang = 'en' } = Astro.props;
+
+const ar = lang === 'ar';
+
+const contact = {
+  email: 'astalahmadmn@gmail.com',
+  whatsapp: '972567202165',
+  github: 'https://github.com/astalmn'
+};
+---
+
+<section
+  class="contact-section"
+  aria-label={ar ? 'طرق التواصل' : 'Contact methods'}
+>
+  <div class="contact-heading">
+    <h2>{ar ? 'تواصل معي' : 'Get in touch'}</h2>
+    <p>
+      {ar
+        ? 'هل لديك مشروع أو فكرة؟ يسعدني التواصل معك.'
+        : 'Have a project or an idea? Feel free to reach out.'}
+    </p>
+  </div>
+
+  <div class="contact-links">
+    <a href={`mailto:${contact.email}`} class="contact-link">
+      <span class="contact-icon">✉</span>
+      <span>
+        <strong>{ar ? 'البريد الإلكتروني' : 'Email'}</strong>
+        <small>{contact.email}</small>
+      </span>
+    </a>
+
+    <a
+      href={`https://wa.me/${contact.whatsapp}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="contact-link"
+    >
+      <span class="contact-icon whatsapp">✆</span>
+      <span>
+        <strong>{ar ? 'واتساب' : 'WhatsApp'}</strong>
+        <small>+{contact.whatsapp}</small>
+      </span>
+    </a>
+
+    <a
+      href={contact.github}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="contact-link"
+    >
+      <span class="contact-icon">⌘</span>
+      <span>
+        <strong>GitHub</strong>
+        <small>github.com/astalmn</small>
+      </span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .contact-section {
+    width: min(1200px, calc(100% - 32px));
+    margin: 48px auto;
+    padding: 32px 24px;
+    border: 1px solid #23446b;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #09182d, #101f3c);
+  }
+
+  .contact-heading {
+    text-align: center;
+    margin-bottom: 26px;
+  }
+
+  h2 {
+    color: #fff;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: #b5c8df;
+  }
+
+  .contact-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px;
+    min-width: 0;
+    border: 1px solid #28486b;
+    border-radius: 14px;
+    background: #0d203b;
+    color: white;
+    text-decoration: none;
+    transition: border-color .2s, transform .2s;
+  }
+
+  .contact-link:hover {
+    border-color: #42d9ff;
+    transform: translateY(-2px);
+  }
+
+  .contact-link:focus-visible {
+    outline: 3px solid #42d9ff;
+    outline-offset: 3px;
+  }
+
+  .contact-icon {
+    color: #42d9ff;
+    font-size: 1.7rem;
+    flex-shrink: 0;
+  }
+
+  .whatsapp {
+    color: #22c55e;
+  }
+
+  .contact-link span:last-child {
+    min-width: 0;
+  }
+
+  strong, small {
+    display: block;
+  }
+
+  small {
+    margin-top: 5px;
+    color: #b5c8df;
+    overflow-wrap: anywhere;
+  }
+
+  @media (max-width: 800px) {
+    .contact-links {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-link {
+      transition: none;
+    }
+
+    .contact-link:hover {
+      transform: none;
+    }
+  }
+</style>
