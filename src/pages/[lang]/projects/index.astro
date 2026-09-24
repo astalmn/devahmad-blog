@@ -1,0 +1,6 @@
+---
+import Base from '../../../layouts/Base.astro';import {getCollection} from 'astro:content';
+export function getStaticPaths(){return [{params:{lang:'en'}},{params:{lang:'ar'}}]}
+const lang=Astro.params.lang as 'en'|'ar';const projects=await getCollection('projects',({data})=>data.lang===lang);
+---
+<Base lang={lang} title="Projects"><section class="wrap section"><h1 style="font-size:3rem">{lang==='ar'?'المشاريع':'Projects'}</h1><p class="muted">{lang==='ar'?'أفكار تطبيقية وأمثلة تعليمية، وليست ادعاءات بمشاريع منفذة.':'Concepts and learning examples; not claims of completed client work.'}</p><div class="cards">{projects.map(p=><a class="glass card" href={`/${lang}/projects/${p.id}/`}><span class="tag">{p.data.stack.join(' / ')}</span><h2>{p.data.title}</h2><p class="muted">{p.data.description}</p><span style="color:#42d9ff">View details →</span></a>)}</div></section></Base>

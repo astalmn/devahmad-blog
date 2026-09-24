@@ -1,0 +1,1 @@
+export default {content:['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],theme:{extend:{colors:{navy:'#061023',cyan:'#42d9ff',electric:'#1685ff'}}},plugins:[]};

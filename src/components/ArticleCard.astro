@@ -1,0 +1,5 @@
+---
+import {articleUrl} from '../lib/site';
+const {post}=Astro.props;
+---
+<article class="glass card"><div><span class="tag">{post.data.category}</span></div><h3 style="font-size:1.3rem;margin:0"><a href={articleUrl(post.id,post.data.lang)}>{post.data.title}</a></h3><p class="muted" style="flex:1;margin:0">{post.data.description}</p><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><small class="muted">{post.data.date.toLocaleDateString(post.data.lang==='ar'?'ar':'en',{dateStyle:'medium'})}</small><a href={articleUrl(post.id,post.data.lang)} style="color:#42d9ff">{post.data.lang==='ar'?'اقرأ ←':'Read →'}</a></div></article>
