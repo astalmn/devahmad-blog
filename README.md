@@ -87,3 +87,5 @@ Cloudflare free plan, GitHub Actions and other services have usage and rate limi
 - [ ] Verify a push to `main` triggers successful Cloudflare deployment.
 
 Official references: https://docs.astro.build/ ; https://developers.cloudflare.com/pages/ ; https://docs.github.com/en/actions
+
+Deployment update: DevAhmad build fix.
