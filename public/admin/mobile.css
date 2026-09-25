@@ -1,0 +1,77 @@
+
+@import url('https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap');
+
+:root {
+  --admin-bg: #f4f7fc;
+  --admin-primary: #14243c;
+  --admin-accent: #2878dc;
+  --admin-border: #e2e8f0;
+}
+
+html {
+  direction: rtl;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--admin-bg) !important;
+  font-family: 'El Messiri', sans-serif !important;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: 'El Messiri', sans-serif !important;
+}
+
+button {
+  border-radius: 10px !important;
+}
+
+input,
+textarea,
+select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  html,
+  body,
+  #nc-root {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  #nc-root {
+    overflow-x: clip;
+  }
+
+  #nc-root main {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  #nc-root header {
+    max-width: 100%;
+  }
+
+  #nc-root button {
+    min-height: 42px;
+    max-width: 100%;
+  }
+
+  #nc-root input,
+  #nc-root textarea {
+    font-size: 16px;
+  }
+
+  #nc-root img {
+    max-width: 100%;
+    height: auto;
+  }
+  }
