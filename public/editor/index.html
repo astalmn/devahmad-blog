@@ -1,5 +1,5 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -25,11 +25,11 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: Tahoma, Arial, sans-serif;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
 .container {
-  width: min(100% - 28px, 760px);
+  width: min(calc(100% - 28px), 760px);
   margin: auto;
 }
 
@@ -38,10 +38,10 @@ header {
   padding: 18px 0;
 }
 
-header .container {
+.header-inner {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
 }
 
@@ -54,7 +54,11 @@ a { color: var(--accent); }
 
 main { padding: 25px 0 60px; }
 
-h1 { font-size: 26px; margin: 0 0 8px; }
+h1 {
+  font-size: 26px;
+  margin: 0 0 8px;
+}
+
 h2 { font-size: 19px; }
 
 .muted {
@@ -77,7 +81,8 @@ label {
   font-weight: bold;
 }
 
-input, textarea {
+input,
+textarea {
   display: block;
   width: 100%;
   min-width: 0;
@@ -87,17 +92,11 @@ input, textarea {
   background: #fff;
   color: #17263e;
   font: 16px Tahoma, Arial, sans-serif;
-  direction: rtl;
 }
 
 textarea {
   resize: vertical;
   line-height: 1.9;
-}
-
-input:focus, textarea:focus {
-  outline: 3px solid #86b6ff66;
-  border-color: var(--accent);
 }
 
 button {
@@ -107,6 +106,11 @@ button {
   border-radius: 11px;
   font: bold 14px Tahoma, Arial, sans-serif;
   cursor: pointer;
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: wait;
 }
 
 .primary {
@@ -126,9 +130,7 @@ button {
   margin-top: 23px;
 }
 
-.actions button {
-  flex: 1;
-}
+.actions button { flex: 1; }
 
 .status {
   padding: 13px;
@@ -140,7 +142,6 @@ button {
 
 .success { background: #164735; }
 .error { background: #663034; }
-
 .hidden { display: none !important; }
 
 .check {
@@ -172,7 +173,7 @@ button {
 <body>
 
 <header>
-  <div class="container">
+  <div class="container header-inner">
     <div class="brand">DevAhmad</div>
     <a href="/dashboard/">لوحة التحكم ←</a>
   </div>
@@ -182,21 +183,26 @@ button {
 
 <h1>محرر المقالات</h1>
 <p class="muted">
-  أنشئ مقالاتك وانشرها من الهاتف مباشرة.
+  كتابة المقالات ونشرها مباشرة من الهاتف.
 </p>
 
 <section id="loginBox" class="card">
   <h2>تسجيل الدخول</h2>
+
   <p class="muted">
-    سجّل الدخول بحساب GitHub الذي يملك
-    صلاحية تعديل مستودع DevAhmad.
+    استخدم حساب GitHub الذي يملك
+    صلاحية النشر في DevAhmad.
   </p>
 
   <button id="loginBtn" class="primary">
     تسجيل الدخول باستخدام GitHub
   </button>
 
-  <p id="loginStatus" class="status hidden"></p>
+  <div
+    id="loginStatus"
+    class="status hidden"
+    role="status">
+  </div>
 </section>
 
 <section id="editorBox" class="hidden">
@@ -207,14 +213,15 @@ button {
     <form id="articleForm">
 
       <label for="title">عنوان المقال *</label>
-      <input id="title" required
-        placeholder="مثال: تعلم TypeScript من الصفر">
+      <input id="title" required>
 
       <label for="slug">رابط المقال *</label>
-      <input id="slug" required
+      <input
+        id="slug"
         dir="ltr"
+        required
         pattern="[a-z0-9-]+"
-        placeholder="learn-typescript">
+        placeholder="my-new-article">
 
       <p class="muted">
         استخدم الحروف الإنجليزية الصغيرة
@@ -222,38 +229,36 @@ button {
       </p>
 
       <label for="description">وصف مختصر *</label>
-      <textarea id="description"
-        rows="3" required></textarea>
+      <textarea
+        id="description"
+        rows="3"
+        required></textarea>
 
       <label for="date">تاريخ النشر *</label>
-      <input id="date" type="date" required>
+      <input
+        id="date"
+        type="date"
+        required>
 
       <label for="category">التصنيف *</label>
-      <input id="category" required
-        placeholder="البرمجة">
+      <input id="category" required>
 
       <label for="tags">الوسوم</label>
-      <input id="tags"
-        placeholder="TypeScript, JavaScript, Web">
+      <input
+        id="tags"
+        placeholder="TypeScript, Web">
 
       <label for="cover">رابط صورة الغلاف</label>
-      <input id="cover" dir="ltr"
+      <input
+        id="cover"
+        dir="ltr"
         placeholder="/uploads/cover.jpg">
 
-      <p class="muted">
-        رفع الصور من الهاتف سيُضاف
-        في المرحلة التالية.
-      </p>
-
       <label for="body">محتوى المقال *</label>
-      <textarea id="body" rows="13"
-        required
-        placeholder="اكتب محتوى المقال باستخدام Markdown..."></textarea>
-
-      <p class="muted">
-        مثال لإضافة صورة داخل المقال:
-        ![وصف الصورة](/uploads/image.jpg)
-      </p>
+      <textarea
+        id="body"
+        rows="13"
+        required></textarea>
 
       <div class="check">
         <input id="draft" type="checkbox">
@@ -266,27 +271,31 @@ button {
       </div>
 
       <div class="actions">
-        <button type="button"
+        <button
+          type="button"
           class="secondary"
           id="previewBtn">
           معاينة
         </button>
 
-        <button type="submit"
+        <button
+          type="submit"
           class="primary"
           id="publishBtn">
           نشر المقال
         </button>
       </div>
+
     </form>
 
-    <div id="publishStatus"
+    <div
+      id="publishStatus"
       class="status hidden"
-      role="status"></div>
+      role="status">
+    </div>
   </div>
 
-  <section id="previewBox"
-    class="card hidden">
+  <section id="previewBox" class="card hidden">
     <h2>معاينة المحتوى</h2>
     <div id="preview"></div>
   </section>
@@ -299,115 +308,154 @@ button {
 "use strict";
 
 const REPO = "astalmn/devahmad-blog";
-const ORIGIN = location.origin;
+const ORIGIN = window.location.origin;
 
 let githubToken = null;
 let loginPopup = null;
 
 const $ = id => document.getElementById(id);
 
-function status(id, message, type = "") {
-  const el = $(id);
-  el.textContent = message;
-  el.className = "status " + type;
+function showStatus(id, message, type = "") {
+  const element = $(id);
+  element.textContent = message;
+  element.className = "status " + type;
 }
 
 function escapeHtml(value) {
   return String(value).replace(
     /[&<>"']/g,
-    c => ({
+    character => ({
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
       '"': "&quot;",
       "'": "&#39;"
-    })[c]
+    })[character]
   );
 }
 
-// OAuth: التواصل مع نافذة callback الحالية.
-window.addEventListener("message", event => {
-  if (event.origin !== ORIGIN) return;
-  if (!loginPopup || event.source !== loginPopup) {
-    return;
-  }
+/*
+ * GitHub OAuth
+ * التواصل مع callback.js الحالي.
+ */
 
-  if (event.data === "authorizing:github") {
-    loginPopup.postMessage(
-      "authorizing:github",
-      ORIGIN
-    );
-    return;
-  }
+window.addEventListener(
+  "message",
+  async event => {
+    if (event.origin !== ORIGIN) return;
+    if (!loginPopup) return;
 
-  if (typeof event.data !== "string") return;
+    if (event.source !== loginPopup) {
+      return;
+    }
 
-  const success =
-    "authorization:github:success:";
+    const message = event.data;
 
-  const error =
-    "authorization:github:error:";
-
-  if (event.data.startsWith(success)) {
-    try {
-      const data = JSON.parse(
-        event.data.slice(success.length)
+    if (message === "authorizing:github") {
+      loginPopup.postMessage(
+        "authorizing:github",
+        ORIGIN
       );
+      return;
+    }
 
-      if (!data.token) {
-        throw new Error("لم يصل رمز الدخول");
+    if (typeof message !== "string") {
+      return;
+    }
+
+    const successPrefix =
+      "authorization:github:success:";
+
+    const errorPrefix =
+      "authorization:github:error:";
+
+    if (message.startsWith(successPrefix)) {
+      try {
+        const result = JSON.parse(
+          message.slice(successPrefix.length)
+        );
+
+        if (!result.token) {
+          throw new Error("Missing token");
+        }
+
+        githubToken = result.token;
+
+        showStatus(
+          "loginStatus",
+          "تم تسجيل الدخول، جارٍ التحقق من الصلاحيات..."
+        );
+
+        try {
+          loginPopup.close();
+        } catch (_) {}
+
+        loginPopup = null;
+
+        await verifyAccess();
+
+      } catch (error) {
+        githubToken = null;
+
+        showStatus(
+          "loginStatus",
+          "تعذر إكمال تسجيل الدخول.",
+          "error"
+        );
       }
 
-      githubToken = data.token;
+      return;
+    }
 
-      $("loginBox").classList.add("hidden");
-      $("editorBox").classList.remove("hidden");
-
-      loginPopup.close();
-      loginPopup = null;
-
-      verifyAccess();
-
-    } catch (err) {
-      status(
+    if (message.startsWith(errorPrefix)) {
+      showStatus(
         "loginStatus",
-        "فشل إكمال تسجيل الدخول.",
+        "فشل تسجيل الدخول إلى GitHub.",
         "error"
       );
     }
   }
+);
 
-  if (event.data.startsWith(error)) {
-    status(
+$("loginBtn").addEventListener(
+  "click",
+  () => {
+    showStatus(
       "loginStatus",
-      "رفض GitHub عملية تسجيل الدخول.",
-      "error"
+      "جارٍ فتح صفحة GitHub..."
+    );
+
+    loginPopup = window.open(
+      "/api/auth",
+      "devahmad_editor_login",
+      "width=600,height=750"
+    );
+
+    if (!loginPopup) {
+      showStatus(
+        "loginStatus",
+        "اسمح بالنوافذ المنبثقة في Chrome.",
+        "error"
+      );
+      return;
+    }
+
+    showStatus(
+      "loginStatus",
+      "أكمل تسجيل الدخول في نافذة GitHub، ثم انتظر العودة إلى المحرر."
     );
   }
-});
+);
 
-$("loginBtn").addEventListener("click", () => {
-  loginPopup = window.open(
-    "/api/auth",
-    "devahmad_login",
-    "width=600,height=750"
-  );
-
-  if (!loginPopup) {
-    status(
-      "loginStatus",
-      "المتصفح منع نافذة تسجيل الدخول. اسمح بالنوافذ المنبثقة.",
-      "error"
-    );
-  } else {
-    status(
-      "loginStatus",
-      "أكمل تسجيل الدخول في نافذة GitHub."
-    );
-  }
-});
+/*
+ * الاتصال بـ GitHub API.
+ */
 
 async function github(path, options = {}) {
+  if (!githubToken) {
+    throw new Error("Not authenticated");
+  }
+
   const response = await fetch(
     "https://api.github.com/" + path,
     {
@@ -425,6 +473,7 @@ async function github(path, options = {}) {
     const error = new Error(
       "GitHub API: " + response.status
     );
+
     error.status = response.status;
     throw error;
   }
@@ -434,31 +483,36 @@ async function github(path, options = {}) {
 
 async function verifyAccess() {
   try {
-    const repo = await github("repos/" + REPO);
+    const repo = await github(
+      "repos/" + REPO
+    );
 
     if (!repo.permissions?.push) {
-      githubToken = null;
-      $("editorBox").classList.add("hidden");
-      $("loginBox").classList.remove("hidden");
-
-      status(
-        "loginStatus",
-        "هذا الحساب لا يملك صلاحية النشر.",
-        "error"
+      throw new Error(
+        "No write permission"
       );
     }
-  } catch (err) {
+
+    $("loginBox").classList.add("hidden");
+    $("editorBox").classList.remove("hidden");
+
+  } catch (error) {
     githubToken = null;
+
     $("editorBox").classList.add("hidden");
     $("loginBox").classList.remove("hidden");
 
-    status(
+    showStatus(
       "loginStatus",
-      "تعذر التحقق من صلاحيات GitHub.",
+      "تعذر التحقق من صلاحية النشر في المستودع.",
       "error"
     );
   }
 }
+
+/*
+ * إنشاء ملف Markdown.
+ */
 
 function yamlString(value) {
   return JSON.stringify(String(value));
@@ -472,18 +526,22 @@ function yamlList(items) {
 
 function createMarkdown() {
   const title = $("title").value.trim();
+
   const description =
     $("description").value.trim();
 
   const date = $("date").value;
-  const category = $("category").value.trim();
+
+  const category =
+    $("category").value.trim();
 
   const tags = $("tags").value
     .split(",")
-    .map(s => s.trim())
+    .map(item => item.trim())
     .filter(Boolean);
 
-  const cover = $("cover").value.trim();
+  const cover =
+    $("cover").value.trim();
 
   const lines = [
     "---",
@@ -503,7 +561,11 @@ function createMarkdown() {
     );
   }
 
-  lines.push("---", "", $("body").value);
+  lines.push(
+    "---",
+    "",
+    $("body").value
+  );
 
   return lines.join("\n") + "\n";
 }
@@ -512,7 +574,11 @@ function base64Utf8(text) {
   const bytes = new TextEncoder().encode(text);
   let binary = "";
 
-  for (let i = 0; i < bytes.length; i += 8192) {
+  for (
+    let i = 0;
+    i < bytes.length;
+    i += 8192
+  ) {
     binary += String.fromCharCode(
       ...bytes.subarray(i, i + 8192)
     );
@@ -521,10 +587,143 @@ function base64Utf8(text) {
   return btoa(binary);
 }
 
-$("previewBtn").addEventListener("click", () => {
-  const box = $("previewBox");
+/*
+ * معاينة المقال.
+ */
 
-  box.classList.remove("hidden");
+$("previewBtn").addEventListener(
+  "click",
+  () => {
+    $("previewBox").classList.remove(
+      "hidden"
+    );
+
+    $("preview").innerHTML =
+      "<h3>" +
+      escapeHtml($("title").value) +
+      "</h3><p>" +
+      escapeHtml($("description").value) +
+      "</p><hr><pre style='white-space:pre-wrap;font:inherit'>" +
+      escapeHtml($("body").value) +
+      "</pre>";
+
+    $("previewBox").scrollIntoView({
+      behavior: "smooth"
+    });
+  }
+);
+
+/*
+ * نشر المقال.
+ */
+
+$("articleForm").addEventListener(
+  "submit",
+  async event => {
+    event.preventDefault();
+
+    if (!githubToken) {
+      showStatus(
+        "publishStatus",
+        "سجّل الدخول أولًا.",
+        "error"
+      );
+      return;
+    }
+
+    const slug =
+      $("slug").value.trim();
+
+    if (
+      !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(
+        slug
+      )
+    ) {
+      showStatus(
+        "publishStatus",
+        "رابط المقال غير صالح.",
+        "error"
+      );
+      return;
+    }
+
+    const button = $("publishBtn");
+    button.disabled = true;
+
+    showStatus(
+      "publishStatus",
+      "جارٍ حفظ المقال في GitHub..."
+    );
+
+    try {
+      const path =
+        "src/content/blog/" +
+        slug +
+        ".md";
+
+      await github(
+        "repos/" +
+        REPO +
+        "/contents/" +
+        path,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            message:
+              "Add article: " +
+              $("title").value.trim(),
+            content: base64Utf8(
+              createMarkdown()
+            ),
+            branch: "main"
+          })
+        }
+      );
+
+      showStatus(
+        "publishStatus",
+        "تم حفظ المقال في GitHub. انتظر اكتمال النشر في Cloudflare.",
+        "success"
+      );
+
+    } catch (error) {
+      const message =
+        error.status === 422
+          ? "يوجد مقال بنفس الرابط، اختر رابطًا مختلفًا."
+          : "تعذر حفظ المقال. رمز الخطأ: " +
+            (error.status || "غير معروف");
+
+      showStatus(
+        "publishStatus",
+        message,
+        "error"
+      );
+
+    } finally {
+      button.disabled = false;
+    }
+  }
+);
+
+/*
+ * التاريخ الافتراضي.
+ */
+
+const today = new Date();
+
+const localDate = new Date(
+  today.getTime() -
+  today.getTimezoneOffset() * 60000
+);
+
+$("date").value =
+  localDate.toISOString().slice(0, 10);
+
+</script>
+
+</body>
+</html>
+sList.remove("hidden");
 
   $("preview").innerHTML =
     "<h3>" +
