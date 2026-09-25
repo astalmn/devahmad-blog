@@ -1,6 +1,149 @@
+
 ---
-import Base from '../../layouts/Base.astro';import {site} from '../../lib/site';
-const pages=['about','resources','contact','privacy'];export function getStaticPaths(){return ['en','ar'].flatMap(lang=>['about','resources','contact','privacy'].map(page=>({params:{lang,page}})))}
-const lang=Astro.params.lang as 'en'|'ar';const page=Astro.params.page as string;const ar=lang==='ar';const titles:{[key:string]:string}={about:ar?'نبذة عني':'About me',resources:ar?'المصادر':'Resources',contact:ar?'تواصل معي':'Contact',privacy:ar?'سياسة الخصوصية':'Privacy policy'};
+import Base from '../../layouts/Base.astro';
+
+export function getStaticPaths() {
+  return ['en', 'ar'].flatMap(lang =>
+    ['about', 'resources', 'contact', 'privacy'].map(page => ({
+      params: { lang, page }
+    }))
+  );
+}
+
+const lang = Astro.params.lang as 'en' | 'ar';
+const page = Astro.params.page as string;
+const ar = lang === 'ar';
+
+const titles: Record<string, string> = {
+  about: ar ? 'نبذة عني' : 'About me',
+  resources: ar ? 'المصادر' : 'Resources',
+  contact: ar ? 'تواصل معي' : 'Contact',
+  privacy: ar ? 'سياسة الخصوصية' : 'Privacy policy'
+};
+
+const resources = [
+  {
+    name: 'Astro documentation',
+    url: 'https://docs.astro.build/',
+    desc: 'Build fast content-focused sites.'
+  },
+  {
+    name: 'TypeScript handbook',
+    url: 'https://www.typescriptlang.org/docs/handbook/intro.html',
+    desc: 'Official TypeScript learning material.'
+  },
+  {
+    name: 'MDN Web Docs',
+    url: 'https://developer.mozilla.org/',
+    desc: 'Reliable web platform documentation.'
+  },
+  {
+    name: 'OWASP',
+    url: 'https://owasp.org/www-project-top-ten/',
+    desc: 'Application security guidance.'
+  },
+  {
+    name: 'Phaser',
+    url: 'https://docs.phaser.io/',
+    desc: 'HTML5 game development.'
+  },
+  {
+    name: 'GitHub Docs',
+    url: 'https://docs.github.com/',
+    desc: 'Version control and collaboration.'
+  }
+];
 ---
-<Base lang={lang} title={titles[page]}><section class="wrap section"><h1 style="font-size:3rem">{titles[page]}</h1>{page==='about'&&<div style="display:flex;gap:40px;align-items:start;flex-wrap:wrap"><img src="/assets/profile.png" width="350" height="350" loading="lazy" alt="DevAhmad portrait" style="width:min(100%,350px);height:auto;border-radius:50%;border:2px solid #178aff"/><div class="prose" style="flex:1;min-width:250px"><p>{ar?'مرحباً، أنا أحمد. أهتم بالبرمجة والذكاء الاصطناعي والأنظمة الذكية وهندسة الحاسوب. هذه المدونة مساحة لمشاركة المعرفة والمشاريع والأفكار التقنية.':'Hi, I’m Ahmad. I focus on programming, artificial intelligence, intelligent systems and computer engineering. This blog is a place to share technical ideas, learning resources and project concepts.'}</p><h2>{ar?'المهارات والمجالات':'Skills and interests'}</h2><p>TypeScript · Web Development · AI · Intelligent Systems · Software Engineering</p><p class="muted">{ar?'أضف هنا خبراتك ومؤهلاتك الفعلية قبل النشر.':'Replace this paragraph with your verified education, experience and achievements before publishing.'}</p></div></div>}{page==='resources'&&<div class="cards">{[{name:'Astro documentation',url:'https://docs.astro.build/',desc:'Build fast content-focused sites.'},{name:'TypeScript handbook',url:'https://www.typescriptlang.org/docs/handbook/intro.html',desc:'Official TypeScript learning material.'},{name:'MDN Web Docs',url:'https://developer.mozilla.org/',desc:'Reliable web platform documentation.'},{name:'OWASP',url:'https://owasp.org/www-project-top-ten/',desc:'Application security guidance.'},{name:'Phaser',url:'https://docs.phaser.io/',desc:'HTML5 game development.'},{name:'GitHub Docs',url:'https://docs.github.com/',desc:'Version control and collaboration.'}].map(x=><a class="glass card" href={x.url} target="_blank" rel="noopener noreferrer"><h2>{x.name} ↗</h2><p class="muted">{x.desc}</p></a>)}</div>}{page==='contact'&&<div class="prose"><p>{ar?'يمكنك التواصل عبر الروابط التالية بعد إضافة حساباتك الحقيقية إلى إعدادات الموقع.':'Add your real contact details in src/lib/site.ts to enable the links below.'}</p><div class="socials">{site.email&&<a class="btn" href={`mailto:${site.email}`}>Email</a>}{site.github&&<a class="btn secondary" href={site.github} rel="noopener noreferrer">GitHub</a>}{site.linkedin&&<a class="btn secondary" href={site.linkedin} rel="noopener noreferrer">LinkedIn</a>}{!site.email&&!site.github&&!site.linkedin&&<p class="muted">Contact details will appear here once configured.</p>}</div><p class="muted">{ar?'لا تُرسل بيانات حساسة عبر البريد الإلكتروني.':'Do not send sensitive information by email.'}</p></div>}{page==='privacy'&&<div class="prose"><p>{ar?'هذا موقع ثابت لا يستخدم قاعدة بيانات ولا يجمع بيانات زوار عبر نماذج. لا توجد أدوات تحليل أو إعلانات أو ملفات تعريف ارتباط للتتبع في النسخة الافتراضية. قد تحتفظ خدمة الاستضافة بسجلات تشغيل وفق سياستها.':'This static website does not collect visitor data through forms, run analytics, serve ads, or set tracking cookies in its default configuration. The hosting provider may process operational request logs under its own privacy policy.'}</p><p>{ar?'الروابط الخارجية تخضع لسياسات مواقعها. إذا أضفت تحليلات أو نماذج تواصل لاحقاً، حدّث هذه الصفحة قبل تفعيلها.':'External links are governed by their respective sites. Update this policy before adding analytics, contact forms, or other data processing.'}</p><p><a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare privacy policy ↗</a></p></div>}</section></Base>
+
+<Base lang={lang} title={titles[page]}>
+  {
+    page !== 'contact' && (
+      <section class="wrap section">
+        <h1 style="font-size:3rem">{titles[page]}</h1>
+
+        {page === 'about' && (
+          <div
+            style="display:flex;gap:40px;align-items:start;flex-wrap:wrap"
+          >
+            <img
+              src="/assets/profile.png"
+              width="350"
+              height="350"
+              loading="lazy"
+              alt="DevAhmad portrait"
+              style="width:min(100%,350px);height:auto;border-radius:50%;border:2px solid #178aff"
+            />
+
+            <div
+              class="prose"
+              style="flex:1;min-width:250px"
+            >
+              <p>
+                {ar
+                  ? 'مرحباً، أنا أحمد. أهتم بالبرمجة والذكاء الاصطناعي والأنظمة الذكية وهندسة الحاسوب. هذه المدونة مساحة لمشاركة المعرفة والمشاريع والأفكار التقنية.'
+                  : 'Hi, I’m Ahmad. I focus on programming, artificial intelligence, intelligent systems and computer engineering. This blog is a place to share technical ideas, learning resources and project concepts.'}
+              </p>
+
+              <h2>
+                {ar ? 'المهارات والمجالات' : 'Skills and interests'}
+              </h2>
+
+              <p>
+                TypeScript · Web Development · AI · Intelligent
+                Systems · Software Engineering
+              </p>
+
+              <p class="muted">
+                {ar
+                  ? 'أضف هنا خبراتك ومؤهلاتك الفعلية قبل النشر.'
+                  : 'Replace this paragraph with your verified education, experience and achievements before publishing.'}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {page === 'resources' && (
+          <div class="cards">
+            {resources.map(resource => (
+              <a
+                class="glass card"
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <h2>{resource.name} ↗</h2>
+                <p class="muted">{resource.desc}</p>
+              </a>
+            ))}
+          </div>
+        )}
+
+        {page === 'privacy' && (
+          <div class="prose">
+            <p>
+              {ar
+                ? 'هذا موقع ثابت لا يستخدم قاعدة بيانات ولا يجمع بيانات زوار عبر نماذج. لا توجد أدوات تحليل أو إعلانات أو ملفات تعريف ارتباط للتتبع في النسخة الافتراضية. قد تحتفظ خدمة الاستضافة بسجلات تشغيل وفق سياستها.'
+                : 'This static website does not collect visitor data through forms, run analytics, serve ads, or set tracking cookies in its default configuration. The hosting provider may process operational request logs under its own privacy policy.'}
+            </p>
+
+            <p>
+              {ar
+                ? 'الروابط الخارجية تخضع لسياسات مواقعها. إذا أضفت تحليلات أو نماذج تواصل لاحقاً، حدّث هذه الصفحة قبل تفعيلها.'
+                : 'External links are governed by their respective sites. Update this policy before adding analytics, contact forms, or other data processing.'}
+            </p>
+
+            <p>
+              <a
+                href="https://www.cloudflare.com/privacypolicy/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Cloudflare privacy policy ↗
+              </a>
+            </p>
+          </div>
+        )}
+      </section>
+    )
+  }
+</Base>
