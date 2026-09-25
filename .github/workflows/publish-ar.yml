@@ -1,5 +1,5 @@
 
-name: Publish Arabic DevAhmad
+name: Publish DevAhmad Media
 
 on:
   workflow_dispatch:
@@ -12,74 +12,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Prepare Arabic project
+      - name: Extract media edition
         shell: bash
         run: |
           set -euo pipefail
 
-          ZIP="devahmad-arabic-el-messiri.zip"
-          PROJECT="/tmp/devahmad-ar/devahmad"
+          ZIP="devahmad-media.zip"
+          PROJECT="/tmp/devahmad-media/devahmad"
 
           if [ ! -f "$ZIP" ]; then
-            echo "ERROR: ZIP file not found"
+            echo "ERROR: devahmad-media.zip not found"
             exit 1
           fi
 
-          mkdir -p /tmp/devahmad-ar
-          unzip -q "$ZIP" -d /tmp/devahmad-ar
+          mkdir -p /tmp/devahmad-media
+          unzip -q "$ZIP" -d /tmp/devahmad-media
 
           if [ ! -f "$PROJECT/package.json" ]; then
             echo "ERROR: Invalid project structure"
             exit 1
           fi
 
-      - name: Fix reading time calculation
-        shell: bash
-        run: |
-          set -euo pipefail
+          echo "Project extracted successfully"
 
-          FILE="/tmp/devahmad-ar/devahmad/src/pages/blog/[...slug].astro"
-
-          if [ ! -f "$FILE" ]; then
-            echo "ERROR: Article page not found"
-            exit 1
-          fi
-
-          python3 - "$FILE" <<'PY'
-          import pathlib
-          import sys
-
-          path = pathlib.Path(sys.argv[1])
-          content = path.read_text()
-
-          old = "post.body.split("
-          new = "(post.body ?? '').split("
-
-          if old not in content:
-              print("ERROR: Expected code not found")
-              sys.exit(1)
-
-          content = content.replace(old, new)
-          path.write_text(content)
-
-          print("Reading time calculation fixed")
-          PY
-
-      - name: Install Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Test Arabic project
-        working-directory: /tmp/devahmad-ar/devahmad
+      - name: Install and test
+        working-directory: /tmp/devahmad-media/devahmad
         run: |
           npm install --no-audit --no-fund
           npm run build
 
-      - name: Replace old project
+      - name: Replace project files
         shell: bash
         run: |
           set -euo pipefail
@@ -88,11 +58,11 @@ jobs:
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='node_modules/' \
-            /tmp/devahmad-ar/devahmad/ ./
+            /tmp/devahmad-media/devahmad/ ./
 
-          rm -f devahmad-arabic-el-messiri.zip
+          rm -f devahmad-media.zip
 
-      - name: Commit and publish
+      - name: Commit and push
         shell: bash
         run: |
           set -euo pipefail
@@ -108,5 +78,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Publish Arabic-only DevAhmad"
+          git commit -m "Publish DevAhmad media edition"
           git push origin HEAD:main
