@@ -1,0 +1,322 @@
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c1729">
+  <meta name="robots" content="noindex,nofollow">
+
+  <title>لوحة التحكم | DevAhmad</title>
+
+  <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0c1729;
+      --surface: #17263e;
+      --surface-2: #20334f;
+      --text: #f5f8ff;
+      --muted: #aabbd3;
+      --accent: #75aaff;
+      --border: #30435e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "El Messiri", sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(100% - 32px, 1100px);
+      margin: auto;
+    }
+
+    header {
+      padding: 26px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .brand {
+      font-size: 27px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .site-link {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 12px;
+    }
+
+    main {
+      padding: 28px 0 48px;
+    }
+
+    .welcome {
+      padding: 26px 22px;
+      background:
+        linear-gradient(135deg, #203d68, #14243d);
+      border: 1px solid #34527b;
+      border-radius: 22px;
+      margin-bottom: 24px;
+    }
+
+    .welcome small {
+      color: #b8d3ff;
+    }
+
+    h1 {
+      font-size: clamp(25px, 6vw, 37px);
+      margin: 10px 0;
+    }
+
+    .welcome p {
+      color: #c2d1e6;
+      font-size: 14px;
+      line-height: 2;
+      margin-bottom: 22px;
+    }
+
+    .primary-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 12px 20px;
+      background: #82b2ff;
+      color: #0c1729;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: 19px;
+      margin: 28px 0 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 20px 16px;
+      min-height: 155px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      transition: background .2s;
+    }
+
+    .card:hover {
+      background: var(--surface-2);
+    }
+
+    .card-icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      background: #294669;
+      color: #a6caff;
+      border-radius: 13px;
+      font-size: 24px;
+    }
+
+    .card strong {
+      font-size: 17px;
+    }
+
+    .card span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .links {
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+    }
+
+    .link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 65px;
+      padding: 16px 20px;
+    }
+
+    .link + .link {
+      border-top: 1px solid var(--border);
+    }
+
+    .arrow {
+      color: var(--accent);
+      font-size: 20px;
+    }
+
+    footer {
+      padding: 28px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (min-width: 760px) {
+      .grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .welcome {
+        padding: 40px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .container {
+        width: min(100% - 24px, 1100px);
+      }
+
+      .grid {
+        gap: 10px;
+      }
+
+      .card {
+        padding: 16px 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container header-content">
+      <div>
+        <div class="brand">DevAhmad</div>
+        <div class="subtitle">لوحة إدارة المحتوى</div>
+      </div>
+
+      <a class="site-link" href="/">
+        عرض الموقع ↗
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="welcome">
+      <small>لوحة التحكم</small>
+      <h1>مرحبًا بك في DevAhmad</h1>
+      <p>
+        إدارة المقالات والمشاريع والصور
+        من واجهة منظمة تناسب هاتفك.
+      </p>
+
+      <a class="primary-button"
+         href="/admin/#/collections/blog/new">
+        ＋ كتابة مقال جديد
+      </a>
+    </section>
+
+    <h2 class="section-title">إدارة المحتوى</h2>
+
+    <section class="grid">
+      <a class="card"
+         href="/admin/#/collections/blog">
+        <div class="card-icon">✎</div>
+        <strong>المقالات</strong>
+        <span>إضافة المقالات وتحريرها</span>
+      </a>
+
+      <a class="card"
+         href="/admin/#/collections/projects">
+        <div class="card-icon">▣</div>
+        <strong>المشاريع</strong>
+        <span>إدارة معرض أعمالك</span>
+      </a>
+
+      <a class="card"
+         href="/admin/#/media">
+        <div class="card-icon">▧</div>
+        <strong>الوسائط</strong>
+        <span>إدارة الصور والملفات</span>
+      </a>
+
+      <a class="card"
+         href="/admin/">
+        <div class="card-icon">⚙</div>
+        <strong>المحرر</strong>
+        <span>فتح لوحة Decap الكاملة</span>
+      </a>
+    </section>
+
+    <h2 class="section-title">روابط سريعة</h2>
+
+    <section class="links">
+      <a class="link"
+         href="/admin/#/collections/blog/new">
+        <span>إضافة مقال جديد</span>
+        <span class="arrow">←</span>
+      </a>
+
+      <a class="link"
+         href="/admin/#/collections/projects/new">
+        <span>إضافة مشروع جديد</span>
+        <span class="arrow">←</span>
+      </a>
+
+      <a class="link" href="/">
+        <span>زيارة المدونة</span>
+        <span class="arrow">←</span>
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    DevAhmad © 2026
+  </footer>
+</body>
+  </html>
+  
