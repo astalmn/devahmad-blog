@@ -1,11 +1,215 @@
+
 ---
 import '../styles/global.css';
-import {copy,site} from '../lib/site';
+import { copy, site } from '../lib/site';
 import ContactLinks from '../components/ContactLinks.astro';
-const {title=site.name,description='Programming, AI and intelligent systems.',lang='en',image='/assets/cover.png',type='website'}=Astro.props;
-const t=copy[lang as 'en'|'ar'];const current=Astro.url.pathname;const other=lang==='en'?'ar':'en';const alternate=current.replace(/^\/(en|ar)(?=\/|$)/,`/${other}`);
-const canonical=new URL(current,Astro.site);const og=new URL(image,Astro.site);
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: 'ar' | 'en';
+  image?: string;
+  type?: string;
+}
+
+const {
+  title = site.name,
+  description = 'Programming, AI and intelligent systems.',
+  lang: requestedLang = 'en',
+  image = '/assets/cover.png',
+  type = 'website'
+} = Astro.props;
+
+const lang = requestedLang === 'ar' ? 'ar' : 'en';
+const ar = lang === 'ar';
+const t = copy[lang];
+
+const current = Astro.url.pathname;
+const other = ar ? 'en' : 'ar';
+
+// Switch language while preserving the current page.
+const alternate = current.replace(
+  /^\/(en|ar)(?=\/|$)/,
+  `/${other}`
+);
+
+// Use the actual deployment URL as a fallback.
+const baseUrl = Astro.site ?? new URL('https://devahmad-blog.pages.dev');
+
+const canonical = new URL(current, baseUrl);
+const alternateUrl = new URL(alternate, baseUrl);
+const og = new URL(image, baseUrl);
 ---
-<!doctype html><html lang={lang} dir={lang==='ar'?'rtl':'ltr'}><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#050c19"/><meta name="description" content={description}/><link rel="canonical" href={canonical}/><link rel="alternate" hreflang={other} href={new URL(alternate,Astro.site)}/><link rel="alternate" type="application/rss+xml" title="DevAhmad RSS" href="/rss.xml"/><meta property="og:type" content={type}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:image" content={og}/><meta name="twitter:card" content="summary_large_image"/><title>{title} | DevAhmad</title></head><body><a href="#main" class="skip">Skip to content</a><header class="wrap" style="display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:80px;flex-wrap:wrap"><a href={`/${lang}/`} style="font-size:1.6rem;font-weight:900"><span style="color:#42d9ff">Dev</span>Ahmad</a><nav aria-label="Primary" style="display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem"><a href={`/${lang}/`}>{t.home}</a><a href={`/${lang}/blog/`}>{t.blog}</a><a href={`/${lang}/projects/`}>{t.projects}</a><a href={`/${lang}/about/`}>{t.about}</a><a href={`/${lang}/resources/`}>{t.resources}</a><a href={`/${lang}/contact/`}>{t.contact}</a><a href={alternate} aria-label={other==='ar'?'العربية':'English'} style="color:#42d9ff">{other.toUpperCase()}</a></nav></header><main id="main"><slot/></main>
-<ContactLinks lang={lang} />
-<footer class="wrap" style="border-top:1px solid #203858;padding-block:35px;display:flex;gap:18px;justify-content:space-between;flex-wrap:wrap"><div><strong>DevAhmad</strong><p class="muted">{site.tagline}</p></div><div class="socials"><a href={`/${lang}/privacy/`}>Privacy</a><a href="/rss.xml">RSS</a>{site.github&&<a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a>}{site.linkedin&&<a href={site.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>}</div><small class="muted">© {new Date().getFullYear()} DevAhmad</small></footer></body></html>
+
+<!doctype html>
+<html lang={lang} dir={ar ? 'rtl' : 'ltr'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <meta name="theme-color" content="#050c19" />
+    <meta name="description" content={description} />
+
+    <link rel="canonical" href={canonical.href} />
+
+    <link
+      rel="alternate"
+      hreflang={other}
+      href={alternateUrl.href}
+    />
+
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="DevAhmad RSS"
+      href="/rss.xml"
+    />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={og.href} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <title>{title} | DevAhmad</title>
+  </head>
+
+  <body>
+    <a href="#main" class="skip">
+      {ar ? 'انتقل إلى المحتوى' : 'Skip to content'}
+    </a>
+
+    <header class="wrap site-header">
+      <a href={`/${lang}/`} class="brand">
+        <span>Dev</span>Ahmad
+      </a>
+
+      <nav
+        aria-label={ar ? 'القائمة الرئيسية' : 'Main navigation'}
+        class="main-nav"
+      >
+        <a href={`/${lang}/`}>{t.home}</a>
+        <a href={`/${lang}/blog/`}>{t.blog}</a>
+        <a href={`/${lang}/projects/`}>{t.projects}</a>
+        <a href={`/${lang}/about/`}>{t.about}</a>
+        <a href={`/${lang}/resources/`}>{t.resources}</a>
+        <a href={`/${lang}/contact/`}>{t.contact}</a>
+
+        <a
+          href={alternate}
+          class="language-switch"
+          aria-label={ar ? 'Switch to English' : 'التبديل إلى العربية'}
+          hreflang={other}
+        >
+          {ar ? 'EN' : 'عربي'}
+        </a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <ContactLinks lang={lang} />
+
+    <footer class="wrap site-footer">
+      <div>
+        <strong>DevAhmad</strong>
+        <p class="muted">{site.tagline}</p>
+      </div>
+
+      <div class="footer-links">
+        <a href={`/${lang}/privacy/`}>
+          {ar ? 'سياسة الخصوصية' : 'Privacy'}
+        </a>
+
+        <a href="/rss.xml">RSS</a>
+
+        <a
+          href="mailto:astalahmadmn@gmail.com"
+        >
+          {ar ? 'البريد الإلكتروني' : 'Email'}
+        </a>
+
+        <a
+          href="https://github.com/astalmn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+      </div>
+
+      <small class="muted">
+        © {new Date().getFullYear()} DevAhmad
+      </small>
+    </footer>
+
+    <style>
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        min-height: 80px;
+        flex-wrap: wrap;
+        padding-block: 16px;
+      }
+
+      .brand {
+        font-size: 1.6rem;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .brand span,
+      .language-switch {
+        color: #42d9ff;
+      }
+
+      .main-nav {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: .9rem;
+      }
+
+      .language-switch {
+        padding: 7px 12px;
+        border: 1px solid #42d9ff;
+        border-radius: 8px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .site-footer {
+        border-top: 1px solid #203858;
+        padding-block: 35px;
+        display: flex;
+        gap: 18px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 768px) {
+        .site-header {
+          align-items: flex-start;
+        }
+
+        .main-nav {
+          gap: 12px;
+        }
+      }
+    </style>
+  </body>
+</html>
