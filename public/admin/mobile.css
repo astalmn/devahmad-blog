@@ -75,3 +75,63 @@ select {
     height: auto;
   }
   }
+
+/* DevAhmad CMS — Mobile layout fixes */
+
+@media screen and (max-width: 768px) {
+  html,
+  body {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  #nc-root {
+    width: 100% !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  #nc-root * {
+    box-sizing: border-box;
+  }
+
+  #nc-root main {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Adapt Decap's desktop columns */
+  #nc-root main > div {
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* Keep collection cards inside the viewport */
+  #nc-root a,
+  #nc-root button,
+  #nc-root input {
+    max-width: 100%;
+  }
+
+  #nc-root input {
+    min-width: 0 !important;
+  }
+
+  /* Prevent long article titles from overflowing */
+  #nc-root a,
+  #nc-root p,
+  #nc-root h1,
+  #nc-root h2,
+  #nc-root h3 {
+    overflow-wrap: anywhere;
+  }
+
+  /* Better touch targets */
+  #nc-root button {
+    min-height: 44px;
+  }
+}
