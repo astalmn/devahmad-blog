@@ -1,0 +1,55 @@
+
+name: Install Local Decap CMS
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Decap CMS
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p public/admin
+
+          curl \
+            --fail \
+            --location \
+            --retry 3 \
+            --retry-delay 5 \
+            --output public/admin/decap-cms.js \
+            https://unpkg.com/decap-cms@3.8.4/dist/decap-cms.js
+
+          test -s public/admin/decap-cms.js
+
+          echo "Decap CMS downloaded successfully"
+
+      - name: Save library to GitHub
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add public/admin/decap-cms.js
+
+          if git diff --cached --quiet; then
+            echo "Library already installed"
+            exit 0
+          fi
+
+          git commit -m "Host Decap CMS locally"
+          git push origin HEAD:main
+          
