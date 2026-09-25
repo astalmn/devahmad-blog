@@ -1,5 +1,5 @@
-import {getCollection} from 'astro:content';
-export const site={name:'DevAhmad',tagline:'Ideas / Code / Smarter Systems',email:'',github:'',linkedin:'',youtube:'',instagram:''};
-export const copy={en:{home:'Home',blog:'Blog',projects:'Projects',about:'About',resources:'Resources',contact:'Contact',intro:'Programmer & Intelligent Systems Engineer',latest:'Latest articles',featured:'Selected projects',viewAll:'Explore all',read:'Read article',browse:'Explore articles',hello:'Building smarter systems, one idea at a time.',search:'Search articles...',sort:'Sort by',newest:'Newest',oldest:'Oldest',all:'All categories'},ar:{home:'الرئيسية',blog:'المدونة',projects:'المشاريع',about:'عني',resources:'المصادر',contact:'تواصل',intro:'مبرمج ومهندس أنظمة ذكية',latest:'أحدث المقالات',featured:'مشاريع مختارة',viewAll:'عرض الكل',read:'اقرأ المقال',browse:'تصفح المقالات',hello:'نحو أنظمة أذكى، فكرة تلو الأخرى.',search:'ابحث في المقالات...',sort:'ترتيب حسب',newest:'الأحدث',oldest:'الأقدم',all:'كل التصنيفات'}};
-export async function posts(lang?:'en'|'ar'){return (await getCollection('blog',({data})=>!data.draft&&(!lang||data.lang===lang))).sort((a,b)=>b.data.date.getTime()-a.data.date.getTime());}
-export const articleUrl=(id:string,lang:string)=>`/${lang}/blog/${id}/`;
+import { getCollection } from 'astro:content';
+export const site = { name: 'DevAhmad', email: 'astalahmadmn@gmail.com', github: 'https://github.com/astalmn', whatsapp: 'https://wa.me/972567202165' };
+export const labels = {home:'الرئيسية',blog:'المدونة',projects:'المشاريع',about:'عني',resources:'المصادر',contact:'تواصل'};
+export async function posts(){return (await getCollection('blog',({data})=>!data.draft && data.lang==='ar')).sort((a,b)=>b.data.date.getTime()-a.data.date.getTime());}
+export const articleUrl=(id:string)=>`/blog/${id}/`;

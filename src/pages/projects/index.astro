@@ -1,0 +1,5 @@
+---
+import Base from '../../layouts/Base.astro';import {getCollection} from 'astro:content';
+const projects=await getCollection('projects',({data})=>data.lang==='ar');
+---
+<Base title="المشاريع"><section class="wrap section"><h1 class="section-title">المشاريع</h1><p class="muted">أفكار تطبيقية وأمثلة تعليمية؛ لا تُعرض بوصفها مشاريع منفذة ما لم يُذكر خلاف ذلك.</p><div class="cards">{projects.map(p=><a class="glass card" href={`/projects/${p.id}/`}><span class="tag">{p.data.stack.join(' · ')}</span><h2>{p.data.title}</h2><p class="muted">{p.data.description}</p><span class="eyebrow">عرض التفاصيل ←</span></a>)}</div></section></Base>

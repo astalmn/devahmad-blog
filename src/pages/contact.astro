@@ -1,0 +1,4 @@
+---
+import Base from '../layouts/Base.astro';import {site} from '../lib/site';
+---
+<Base title="تواصل معي"><section class="wrap section"><h1 class="section-title">تواصل معي</h1><p class="muted">يمكنك التواصل عبر إحدى القنوات التالية.</p><div class="cards"><a class="glass card" href={`mailto:${site.email}`}><span class="tag">البريد الإلكتروني</span><h2>{site.email}</h2><p class="muted">للاستفسارات والتعاون.</p></a><a class="glass card" href={site.whatsapp} target="_blank" rel="noopener noreferrer"><span class="tag">واتساب</span><h2>تواصل عبر واتساب</h2><p class="muted">فتح المحادثة مباشرة.</p></a><a class="glass card" href={site.github} target="_blank" rel="noopener noreferrer"><span class="tag">GitHub</span><h2>حساب GitHub</h2><p class="muted">المستودعات والمشاريع البرمجية.</p></a></div></section></Base>

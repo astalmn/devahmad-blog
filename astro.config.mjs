@@ -1,20 +1,2 @@
-
-import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
-import sitemap from '@astrojs/sitemap';
-import tailwind from '@astrojs/tailwind';
-
-export default defineConfig({
-  site: 'https://devahmad-blog.pages.dev',
-  output: 'static',
-  integrations: [
-    mdx(),
-    sitemap(),
-    tailwind()
-  ],
-  markdown: {
-    shikiConfig: {
-      theme: 'github-dark'
-    }
-  }
-});
+import {defineConfig} from 'astro/config';import mdx from '@astrojs/mdx';import sitemap from '@astrojs/sitemap';
+export default defineConfig({site:process.env.SITE_URL||'https://devahmad-blog.pages.dev',integrations:[mdx(),sitemap()],output:'static',trailingSlash:'always',markdown:{shikiConfig:{theme:'github-dark'}}});

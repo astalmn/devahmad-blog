@@ -1,5 +1,6 @@
 ---
 import {articleUrl} from '../lib/site';
-const {post}=Astro.props;
+import type {CollectionEntry} from 'astro:content';
+const {post}=Astro.props as {post:CollectionEntry<'blog'>};
 ---
-<article class="glass card"><div><span class="tag">{post.data.category}</span></div><h3 style="font-size:1.3rem;margin:0"><a href={articleUrl(post.id,post.data.lang)}>{post.data.title}</a></h3><p class="muted" style="flex:1;margin:0">{post.data.description}</p><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><small class="muted">{post.data.date.toLocaleDateString(post.data.lang==='ar'?'ar':'en',{dateStyle:'medium'})}</small><a href={articleUrl(post.id,post.data.lang)} style="color:#42d9ff">{post.data.lang==='ar'?'اقرأ ←':'Read →'}</a></div></article>
+<article class="glass card"><span class="tag">{post.data.category}</span><h3><a href={articleUrl(post.id)}>{post.data.title}</a></h3><p class="muted">{post.data.description}</p><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><time class="muted" datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'medium'})}</time><a href={articleUrl(post.id)} style="color:#70dfff;font-weight:700">اقرأ المقال ←</a></div></article>

@@ -1,6 +1,0 @@
----
-import Base from '../../../layouts/Base.astro';import {getCollection,render} from 'astro:content';
-export async function getStaticPaths(){return (await getCollection('projects')).map(project=>({params:{lang:project.data.lang,slug:project.id},props:{project}}))}
-const {project}=Astro.props;const {Content}=await render(project);
----
-<Base lang={project.data.lang} title={project.data.title} description={project.data.description}><article class="wrap section"><a href={`/${project.data.lang}/projects/`} class="muted">← Projects</a><h1 style="font-size:3rem">{project.data.title}</h1><p class="muted">{project.data.description}</p><p>{project.data.stack.map((s:string)=><span class="tag" style="margin:4px">{s}</span>)}</p><div class="prose"><Content/></div><div class="socials">{project.data.demo&&<a class="btn" href={project.data.demo} target="_blank" rel="noopener noreferrer">Live demo</a>}{project.data.repository&&<a class="btn secondary" href={project.data.repository} target="_blank" rel="noopener noreferrer">Source code</a>}</div></article></Base>

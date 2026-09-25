@@ -1,0 +1,6 @@
+---
+import Base from '../../layouts/Base.astro';import {getCollection,render} from 'astro:content';import type {CollectionEntry} from 'astro:content';
+export async function getStaticPaths(){return (await getCollection('projects',({data})=>data.lang==='ar')).map(project=>({params:{slug:project.id},props:{project}}));}
+const {project}=Astro.props as {project:CollectionEntry<'projects'>};const {Content}=await render(project);
+---
+<Base title={project.data.title} description={project.data.description}><article class="wrap section"><a href="/projects/" class="muted">→ العودة إلى المشاريع</a><h1 class="section-title" style="margin-top:22px">{project.data.title}</h1><p class="muted">{project.data.description}</p><p>{project.data.stack.map(s=><span class="tag" style="margin:4px">{s}</span>)}</p><div class="prose"><Content/></div><div class="controls">{project.data.demo&&<a class="btn" href={project.data.demo} target="_blank" rel="noopener noreferrer">تجربة المشروع</a>}{project.data.repository&&<a class="btn secondary" href={project.data.repository} target="_blank" rel="noopener noreferrer">الشيفرة المصدرية</a>}</div></article></Base>

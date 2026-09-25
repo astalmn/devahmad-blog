@@ -1,0 +1,5 @@
+---
+import Base from '../layouts/Base.astro';
+const resources=[{name:'توثيق Astro',url:'https://docs.astro.build/',desc:'بناء مواقع سريعة تعتمد على المحتوى.'},{name:'دليل TypeScript',url:'https://www.typescriptlang.org/docs/handbook/intro.html',desc:'المرجع الرسمي لتعلم TypeScript.'},{name:'MDN Web Docs',url:'https://developer.mozilla.org/',desc:'مراجع HTML وCSS وJavaScript.'},{name:'OWASP',url:'https://owasp.org/www-project-top-ten/',desc:'إرشادات أمن تطبيقات الويب.'},{name:'Phaser',url:'https://docs.phaser.io/',desc:'توثيق محرك ألعاب HTML5.'},{name:'GitHub Docs',url:'https://docs.github.com/',desc:'إدارة الإصدارات والتعاون البرمجي.'}];
+---
+<Base title="المصادر"><section class="wrap section"><h1 class="section-title">المصادر</h1><p class="muted">مراجع تقنية مفيدة للتعلم والتطوير.</p><div class="cards">{resources.map(resource=><a class="glass card" href={resource.url} target="_blank" rel="noopener noreferrer"><h2>{resource.name} ↗</h2><p class="muted">{resource.desc}</p></a>)}</div></section></Base>
