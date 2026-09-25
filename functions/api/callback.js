@@ -3,28 +3,36 @@ const SITE = "https://devahmad-blog.pages.dev";
 
 function popup(message) {
   const html = `<!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<title>GitHub Authentication</title>
+  <meta charset="utf-8">
+  <title>DevAhmad Login</title>
 </head>
 <body>
-<p>Completing authentication...</p>
-<script>
-(function () {
-  const origin = ${JSON.stringify(SITE)};
-  const message = ${JSON.stringify(message)};
+  <p>Completing GitHub login...</p>
 
-  if (!window.opener) {
-    document.body.textContent =
-      "Please return to the CMS and try again.";
-    return;
-  }
+  <script>
+    const origin = ${JSON.stringify(SITE)};
+    const message = ${JSON.stringify(message)};
 
-  window.opener.postMessage(message, origin);
-  window.close();
-})();
-</script>
+    if (!window.opener) {
+      document.body.textContent =
+        "Please return to the CMS and try again.";
+    } else {
+      window.addEventListener("message", function(event) {
+        if (event.origin !== origin) return;
+
+        if (event.data === "authorizing:github") {
+          window.opener.postMessage(message, origin);
+        }
+      });
+
+      window.opener.postMessage(
+        "authorizing:github",
+        origin
+      );
+    }
+  </script>
 </body>
 </html>`;
 
@@ -34,8 +42,9 @@ function popup(message) {
       "Cache-Control": "no-store",
       "Referrer-Policy": "no-referrer",
       "Content-Security-Policy":
-        "default-src 'none'; script-src 'unsafe-inline'; " +
-        "style-src 'unsafe-inline'; base-uri 'none'"
+        "default-src 'none'; " +
+        "script-src 'unsafe-inline'; " +
+        "base-uri 'none'"
     }
   });
 }
@@ -54,13 +63,21 @@ export async function onRequestGet({ request, env }) {
     .find(item => item.startsWith("oauth_state="))
     ?.slice("oauth_state=".length);
 
-  if (!code || !state || !savedState || state !== savedState) {
+  if (
+    !code ||
+    !state ||
+    !savedState ||
+    state !== savedState
+  ) {
     return new Response("Invalid OAuth state", {
       status: 403
     });
   }
 
-  if (!env.GITHUB_CLIENT_ID || !env.GITHUB_CLIENT_SECRET) {
+  if (
+    !env.GITHUB_CLIENT_ID ||
+    !env.GITHUB_CLIENT_SECRET
+  ) {
     return new Response("OAuth is not configured", {
       status: 503
     });
@@ -71,7 +88,7 @@ export async function onRequestGet({ request, env }) {
     {
       method: "POST",
       headers: {
-        "Accept": "application/json",
+        Accept: "application/json",
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
@@ -82,6 +99,12 @@ export async function onRequestGet({ request, env }) {
       })
     }
   );
+
+  if (!response.ok) {
+    return new Response("GitHub token request failed", {
+      status: 502
+    });
+  }
 
   const data = await response.json();
 
