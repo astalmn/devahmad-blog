@@ -3,14 +3,13 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<html lang="ar" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>اختبار اللغة العربية</title>
-  </head>
-  <body style="background:white;color:black;padding:24px">
-    <h1>الاختبار الأول: العربية تعمل</h1>
-    <p>هذه صفحة مستقلة لا تستخدم تصميم الموقع.</p>
-  </body>
-</html>
+<Base
+  lang="ar"
+  title="اختبار التصميم العربي"
+  description="اختبار عرض اللغة العربية"
+>
+  <section class="wrap section">
+    <h1>الاختبار الثاني: التصميم العربي يعمل</h1>
+    <p>إذا ظهر هذا النص مع قائمة الموقع، فإن التصميم المشترك يعمل بالعربية.</p>
+  </section>
+</Base>
