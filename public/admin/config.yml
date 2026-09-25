@@ -1,0 +1,59 @@
+locale: ar
+site_url: https://devahmad-blog.pages.dev
+logo_url: /assets/cover.png
+backend:
+  name: github
+  repo: astalmn/devahmad-blog
+  branch: main
+  base_url: https://devahmad-blog.pages.dev
+  auth_endpoint: api/auth
+media_folder: public/uploads
+public_folder: /uploads
+publish: true
+collections:
+  - name: blog
+    label: المقالات
+    label_singular: مقال
+    folder: src/content/blog
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    identifier_field: title
+    summary: "{{title}} — {{date}}"
+    fields:
+      - {label: العنوان, name: title, widget: string}
+      - {label: وصف مختصر, name: description, widget: text}
+      - {label: تاريخ النشر, name: date, widget: datetime, format: 'YYYY-MM-DD', date_format: 'YYYY-MM-DD', time_format: false}
+      - {label: التصنيف, name: category, widget: string}
+      - {label: الوسوم, name: tags, widget: list, required: false, default: []}
+      - {label: اللغة, name: lang, widget: hidden, default: ar}
+      - {label: مسودة, name: draft, widget: boolean, default: false}
+      - {label: مقال مميز, name: featured, widget: boolean, default: false}
+      - {label: صورة الغلاف, name: cover, widget: image, required: false}
+      - label: فيديوهات YouTube داخل المقال
+        name: videos
+        widget: list
+        required: false
+        collapsed: true
+        summary: "{{fields.title}}"
+        fields:
+          - {label: عنوان الفيديو, name: title, widget: string}
+          - {label: رابط YouTube, name: url, widget: string, hint: "الصق رابط youtube.com/watch?v= أو youtu.be"}
+      - {label: محتوى المقال (يمكن إدراج صور من زر +), name: body, widget: markdown, hint: "استخدم زر الصورة لرفع الصور ووضعها بين الفقرات."}
+  - name: projects
+    label: المشاريع
+    label_singular: مشروع
+    folder: src/content/projects
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - {label: اسم المشروع, name: title, widget: string}
+      - {label: وصف المشروع, name: description, widget: text}
+      - {label: التقنيات, name: stack, widget: list, required: false, default: []}
+      - {label: اللغة, name: lang, widget: hidden, default: ar}
+      - {label: رابط التجربة, name: demo, widget: string, required: false}
+      - {label: رابط المستودع, name: repository, widget: string, required: false}
+      - {label: التفاصيل, name: body, widget: markdown}

@@ -1,0 +1,17 @@
+---
+interface Props { pageId: string; title: string; }
+const { pageId, title } = Astro.props;
+const key = import.meta.env.PUBLIC_ECHOTHREAD_API_KEY || '';
+---
+<section class="glass" style="margin-block:48px;padding:24px" aria-label="تعليقات القراء">
+  <h2>تعليقات القراء</h2>
+  {key ? (
+    <>
+      <p class="muted">يمكنك التعليق بالاسم والبريد الإلكتروني دون حساب GitHub. تخضع التعليقات للمراجعة.</p>
+      <div id="echothread" data-api-key={key} data-identifier={pageId} data-title={title}></div>
+      <script is:inline src="https://cdn.echothread.io/widget.js" async></script>
+    </>
+  ) : (
+    <p class="muted">التعليقات قيد التجهيز وستتاح قريبًا.</p>
+  )}
+</section>
