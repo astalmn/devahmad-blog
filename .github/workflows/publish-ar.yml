@@ -24,7 +24,7 @@ jobs:
           PROJECT="/tmp/devahmad-ar/devahmad"
 
           if [ ! -f "$ZIP" ]; then
-            echo "ERROR: ZIP file not found: $ZIP"
+            echo "ERROR: ZIP file not found"
             exit 1
           fi
 
@@ -32,13 +32,41 @@ jobs:
           unzip -q "$ZIP" -d /tmp/devahmad-ar
 
           if [ ! -f "$PROJECT/package.json" ]; then
-            echo "ERROR: package.json not found"
-            echo "Extracted files:"
-            ls -la /tmp/devahmad-ar
+            echo "ERROR: Invalid project structure"
             exit 1
           fi
 
-          echo "Arabic project extracted successfully"
+      - name: Fix reading time calculation
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FILE="/tmp/devahmad-ar/devahmad/src/pages/blog/[...slug].astro"
+
+          if [ ! -f "$FILE" ]; then
+            echo "ERROR: Article page not found"
+            exit 1
+          fi
+
+          python3 - "$FILE" <<'PY'
+          import pathlib
+          import sys
+
+          path = pathlib.Path(sys.argv[1])
+          content = path.read_text()
+
+          old = "post.body.split("
+          new = "(post.body ?? '').split("
+
+          if old not in content:
+              print("ERROR: Expected code not found")
+              sys.exit(1)
+
+          content = content.replace(old, new)
+          path.write_text(content)
+
+          print("Reading time calculation fixed")
+          PY
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -56,13 +84,11 @@ jobs:
         run: |
           set -euo pipefail
 
-          PROJECT="/tmp/devahmad-ar/devahmad"
-
           rsync -a --delete \
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='node_modules/' \
-            "$PROJECT/" ./
+            /tmp/devahmad-ar/devahmad/ ./
 
           rm -f devahmad-arabic-el-messiri.zip
 
