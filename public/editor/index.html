@@ -730,66 +730,164 @@
 
           await github(
             "repos/" +
-            REPO +
-            "/contents/" +
-            path,
-            {
-              method: "PUT",
 
-              body: JSON.stringify({
-                message:
-                  "Add article: " +
-                  $("title").value.trim(),
+"use strict";
 
-                content: base64Utf8(
-                  createMarkdown()
-                ),
+const $ = id => document.getElementById(id);
 
-                branch: "main"
-              })
-            }
+function showStatus(id, message, type = "") {
+  const element = $(id);
+  element.textContent = message;
+  element.className = "status " + type;
+}
+
+// التحقق من جلسة تسجيل الدخول
+async function checkLogin() {
+  try {
+    const response = await fetch("/api/editor-status", {
+      credentials: "same-origin",
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("Not signed in");
+    }
+
+    const data = await response.json();
+
+    if (!data.authenticated) {
+      throw new Error("Not authorized");
+    }
+
+    $("loginBox").classList.add("hidden");
+    $("editorBox").classList.remove("hidden");
+
+  } catch {
+    $("editorBox").classList.add("hidden");
+    $("loginBox").classList.remove("hidden");
+
+    showStatus(
+      "loginStatus",
+      "اضغط تسجيل الدخول باستخدام GitHub."
+    );
+  }
+}
+
+// تسجيل الدخول في التبويب نفسه
+$("loginBtn").addEventListener("click", () => {
+  window.location.assign("/api/editor-login");
+});
+
+// معاينة المقال
+$("previewBtn").addEventListener("click", () => {
+  $("preview").textContent =
+    $("title").value + "\n\n" +
+    $("description").value + "\n\n" +
+    $("body").value;
+
+  $("previewBox").classList.remove("hidden");
+
+  $("previewBox").scrollIntoView({
+    behavior: "smooth"
+  });
+});
+
+// نشر المقال
+$("articleForm").addEventListener(
+  "submit",
+  async event => {
+    event.preventDefault();
+
+    const button = $("publishBtn");
+    button.disabled = true;
+
+    showStatus(
+      "publishStatus",
+      "جارٍ حفظ المقال..."
+    );
+
+    try {
+      const article = {
+        title: $("title").value.trim(),
+        slug: $("slug").value.trim(),
+        description: $("description").value.trim(),
+        date: $("date").value,
+        category: $("category").value.trim(),
+        tags: $("tags").value
+          .split(",")
+          .map(tag => tag.trim())
+          .filter(Boolean),
+        cover: $("cover").value.trim(),
+        body: $("body").value,
+        draft: $("draft").checked,
+        featured: $("featured").checked
+      };
+
+      const response = await fetch(
+        "/api/editor-publish",
+        {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(article)
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error(
+            "انتهت جلسة الدخول. سجّل الدخول مجددًا."
           );
-
-          showStatus(
-            "publishStatus",
-            "تم حفظ المقال في GitHub. انتظر اكتمال نشر Cloudflare.",
-            "success"
-          );
-
-        } catch (error) {
-
-          const message =
-            error.status === 422
-              ? "يوجد مقال بنفس الرابط. اختر رابطًا آخر."
-              : "فشل الحفظ. رمز الخطأ: " +
-                (error.status || "غير معروف");
-
-          showStatus(
-            "publishStatus",
-            message,
-            "error"
-          );
-
-        } finally {
-
-          button.disabled = false;
-
         }
 
+        if (response.status === 409) {
+          throw new Error(
+            "يوجد مقال بنفس الرابط. اختر رابطًا آخر."
+          );
+        }
+
+        throw new Error(
+          result.error || "تعذر نشر المقال."
+        );
       }
-    );
 
-    // تحديد تاريخ اليوم تلقائيًا.
+      showStatus(
+        "publishStatus",
+        "تم حفظ المقال بنجاح في GitHub. انتظر اكتمال نشر Cloudflare.",
+        "success"
+      );
 
-    const now = new Date();
+    } catch (error) {
+      showStatus(
+        "publishStatus",
+        error.message,
+        "error"
+      );
 
-    const localDate = new Date(
-      now.getTime() -
-      now.getTimezoneOffset() * 60000
-    );
+    } finally {
+      button.disabled = false;
+    }
+  }
+);
 
-    $("date").value =
-      localDate.toISOString().slice(0, 10);
+// التاريخ الافتراضي
+const now = new Date();
+
+const localDate = new Date(
+  now.getTime() -
+  now.getTimezoneOffset() * 60000
+);
+
+$("date").value =
+  localDate.toISOString().slice(0, 10);
+
+// فحص الجلسة عند فتح الصفحة
+checkLogin();
+
 
   </script>
 
