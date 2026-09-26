@@ -216,21 +216,70 @@ export async function onRequestGet({ request, env }) {
       );
     }
 
-    const articles = files
-      .filter(file =>
-        file.type === "file" &&
-        file.name.endsWith(".md")
-      )
-      .map(file => ({
-        slug: file.name.slice(0, -3),
-        name: file.name,
-        path: file.path,
-        sha: file.sha
-      }))
-      .sort((a, b) =>
-        a.name.localeCompare(b.name, "ar")
-      );
+    // Return metadata only: full Markdown is fetched when an article is opened.
+    const markdownFiles = files.filter(file =>
+      file.type === "file" && file.name.endsWith(".md")
+    );
 
+    function frontmatterValue(content, key) {
+      const normalized = content.replace(/\r\n/g, "\n");
+      const match = normalized.match(/^---\n([\s\S]*?)\n---(?:\n|$)/);
+      if (!match) return "";
+      // Only read single-line scalar fields; preserve the original Markdown.
+      const line = match[1].split("\n").find(row =>
+        new RegExp("^" + key + ":\\s*").test(row)
+      );
+      if (!line) return "";
+      const raw = line.slice(line.indexOf(":") + 1).trim();
+      if (raw.startsWith('"') && raw.endsWith('"')) {
+        try { return JSON.parse(raw); } catch { return raw.slice(1, -1); }
+      }
+      if (raw.startsWith("'") && raw.endsWith("'")) {
+        return raw.slice(1, -1).replace(/''/g, "'");
+      }
+      return raw.replace(/\s+#.*$/, "");
+    }
+
+    // Small batches avoid overwhelming GitHub and keep the browser response compact.
+    const articles = [];
+    for (let i = 0; i < markdownFiles.length; i += 4) {
+      const batch = markdownFiles.slice(i, i + 4);
+      const results = await Promise.all(batch.map(async file => {
+        const fallback = {
+          slug: file.name.slice(0, -3),
+          name: file.name,
+          path: file.path,
+          sha: file.sha,
+          title: file.name.slice(0, -3),
+          category: "",
+          draft: null
+        };
+        try {
+          const res = await fetch(
+            "https://api.github.com/repos/" + REPO +
+              "/contents/" + file.path + "?ref=main",
+            { headers }
+          );
+          if (!res.ok) return fallback;
+          const detail = await res.json();
+          if (detail.encoding !== "base64" || !detail.content) return fallback;
+          const content = decodeGitHubContent(detail.content);
+          const title = frontmatterValue(content, "title");
+          const category = frontmatterValue(content, "category");
+          const draft = frontmatterValue(content, "draft");
+          return {
+            ...fallback,
+            title: title || fallback.title,
+            category,
+            draft: draft === "true" ? true : draft === "false" ? false : null
+          };
+        } catch {
+          return fallback;
+        }
+      }));
+      articles.push(...results);
+    }
+    articles.sort((a, b) => a.title.localeCompare(b.title, "ar"));
     return json({ articles });
 
   } catch {
@@ -240,4 +289,5 @@ export async function onRequestGet({ request, env }) {
     );
   }
 }
-  
+
+                               
