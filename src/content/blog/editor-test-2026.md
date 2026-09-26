@@ -10,3 +10,4 @@ featured: false
 ---
 
 Yhhhg
+\n![صورة المقال](/uploads/04d11e2d-386b-471d-9fda-541b4bcd3f85.webp)
