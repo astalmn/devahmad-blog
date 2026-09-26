@@ -11,4 +11,4 @@ featured: false
 
 # اختبار المحرر
 
-هذا مقال تجريبي للتحقق من نجاح النشر باستخدام GitHub وCloudflare Pages.
+هذا مقال تجريبي للتحقق من نجاح النشر باستخدام GitHub وCloudflare Pages.وهذا ايضا 
