@@ -1,0 +1,30 @@
+name: Publish scheduled articles
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: publish-scheduled
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Publish due articles
+        run: python3 scripts/publish_scheduled.py
+      - name: Commit published articles
+        run: |
+          if git diff --quiet -- src/content/blog; then
+            echo 'No articles due'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/content/blog
+          git commit -m 'Publish scheduled articles'
+          git push
