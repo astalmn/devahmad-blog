@@ -43,3 +43,31 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
 document.querySelector('#copylink')?.addEventListener('click',async()=>{await navigator.clipboard.writeText(location.href);const b=document.querySelector('#copylink');if(b)b.textContent='تم نسخ الرابط'});
 document.querySelector('#share')?.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:document.title,url:location.href})}catch{}}else{await navigator.clipboard.writeText(location.href)}});
 </script>
+<style>
+article.wrap{width:100%;max-width:1200px;margin-inline:auto;box-sizing:border-box;overflow:hidden}
+article.wrap *{box-sizing:border-box}
+.article-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:32px;align-items:start}
+.prose{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.prose img,.prose video,.prose iframe,.prose svg{max-width:100%;height:auto}
+.prose pre{max-width:100%;overflow-x:auto}
+.prose code{overflow-wrap:anywhere}
+.prose table{display:block;max-width:100%;overflow-x:auto}
+.article-cover{max-width:100%!important}
+.article-cover img{max-width:100%}
+.article-videos,.article-video,.video-frame{width:100%;max-width:100%}
+.video-frame{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:14px}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.controls{display:flex;flex-wrap:wrap;gap:10px}
+aside{min-width:0}
+@media(max-width:768px){
+article.wrap{padding-inline:16px!important;overflow:hidden}
+article.wrap header{width:100%;max-width:100%!important}
+article.wrap h1{font-size:clamp(1.75rem,8vw,2.4rem)!important;overflow-wrap:anywhere}
+.article-layout{grid-template-columns:minmax(0,1fr)!important;gap:24px}
+.prose{width:100%;max-width:100%;min-width:0}
+aside{width:100%;max-width:100%}
+.article-cover{width:100%;margin-top:20px!important}
+.cards{grid-template-columns:1fr!important}
+.controls .btn{max-width:100%}
+}
+</style>
