@@ -8,7 +8,19 @@ import type {CollectionEntry} from 'astro:content';
 export async function getStaticPaths(){return (await getCollection('blog',({data})=>data.lang==='ar'&&!data.draft)).map(post=>({params:{slug:post.id},props:{post}}));}
 const {post}=Astro.props as {post:CollectionEntry<'blog'>};
 const {Content,headings}=await render(post);
-const related=(await posts()).filter(p=>p.id!==post.id&&(p.data.category===post.data.category||p.data.tags.some(tag=>post.data.tags.includes(tag)))).slice(0,3);
+// Rank published Arabic articles by shared tags, then category; use recency as a tie-breaker.
+const currentTags = new Set(post.data.tags.map(tag => tag.trim().toLocaleLowerCase()));
+const related = (await posts())
+  .filter(p => p.id !== post.id)
+  .map(p => {
+    const sharedTags = p.data.tags.filter(tag => currentTags.has(tag.trim().toLocaleLowerCase())).length;
+    const sameCategory = p.data.category === post.data.category;
+    return {p, score: sharedTags * 3 + (sameCategory ? 2 : 0)};
+  })
+  .filter(item => item.score > 0)
+  .sort((a,b) => b.score - a.score || b.p.data.date.getTime() - a.p.data.date.getTime())
+  .slice(0,3)
+  .map(item => item.p);
 const minutes=Math.max(1,Math.ceil((post.body ?? '').split(/\s+/).length/220));
 // Extract only valid YouTube video IDs. Never embed arbitrary visitor-provided URLs.
 function youtubeId(value: string): string | null {
