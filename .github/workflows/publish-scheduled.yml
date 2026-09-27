@@ -28,3 +28,5 @@ jobs:
           git add src/content/blog
           git commit -m 'Publish scheduled articles'
           git push
+
+# Refresh scheduled workflow registration; GitHub cron runs on UTC and may be delayed.
