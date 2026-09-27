@@ -93,6 +93,21 @@ function encodeBase64(text) {
   return btoa(binary);
 }
 
+function isYouTubeUrl(raw) {
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "https:") return false;
+    const host = u.hostname.toLowerCase();
+    let id = "";
+    if (["youtu.be", "www.youtu.be"].includes(host)) id = u.pathname.slice(1).split("/")[0];
+    else if (["youtube.com", "www.youtube.com", "m.youtube.com", "youtube-nocookie.com", "www.youtube-nocookie.com"].includes(host)) {
+      if (u.pathname === "/watch") id = u.searchParams.get("v") || "";
+      else if (/^\/(shorts|embed|live)\//.test(u.pathname)) id = u.pathname.split("/")[2] || "";
+    }
+    return /^[A-Za-z0-9_-]{11}$/.test(id);
+  } catch { return false; }
+}
+
 export async function onRequestPost({ request, env }) {
   if (
     request.headers.get("Origin") !== SITE ||
@@ -130,6 +145,7 @@ export async function onRequestPost({ request, env }) {
     date,
     category,
     tags = [],
+    videos = [],
     cover = "",
     body,
     draft = false,
@@ -146,6 +162,9 @@ export async function onRequestPost({ request, env }) {
         value.trim().length > 0
     ) ||
     !/^\d{4}-\d{2}-\d{2}$/.test(date || "") ||
+    !Array.isArray(videos) ||
+    videos.length > 10 ||
+    !videos.every(v => v && typeof v.title === "string" && v.title.trim().length > 0 && v.title.length <= 180 && typeof v.url === "string" && v.url.length <= 500 && isYouTubeUrl(v.url)) ||
     !Array.isArray(tags) ||
     tags.length > 30 ||
     !tags.every(tag => typeof tag === "string") ||
@@ -198,6 +217,8 @@ export async function onRequestPost({ request, env }) {
       "draft: " + draft,
       "featured: " + featured
     ];
+
+    if (videos.length) lines.push("videos: " + JSON.stringify(videos.map(v => ({title:v.title.trim(),url:v.url.trim()}))));
 
     if (cover.trim()) {
       lines.push(
