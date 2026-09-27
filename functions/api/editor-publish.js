@@ -149,6 +149,7 @@ export async function onRequestPost({ request, env }) {
     cover = "",
     body,
     draft = false,
+    scheduledAt = null,
     featured = false
   } = article;
 
@@ -170,6 +171,8 @@ export async function onRequestPost({ request, env }) {
     !tags.every(tag => typeof tag === "string") ||
     typeof cover !== "string" ||
     typeof draft !== "boolean" ||
+    !(scheduledAt === null || (typeof scheduledAt === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(scheduledAt) && Number.isFinite(Date.parse(scheduledAt)) && Date.parse(scheduledAt) > Date.now() + 60000 && Date.parse(scheduledAt) < Date.now() + 366*86400000)) ||
+    (scheduledAt !== null && !draft) ||
     typeof featured !== "boolean"
   ) {
     return json({ error: "Invalid article data" }, 400);
@@ -215,6 +218,7 @@ export async function onRequestPost({ request, env }) {
         "]",
       "lang: ar",
       "draft: " + draft,
+      ...(scheduledAt ? ["scheduledAt: " + yamlString(scheduledAt)] : []),
       "featured: " + featured
     ];
 
