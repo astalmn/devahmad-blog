@@ -8,6 +8,7 @@ lang: ar
 draft: false
 featured: true
 cover: "/uploads/f21e71a0-da69-4110-b640-7db0ba631401.webp"
+videos: [{"title":"مهنة لاعب 5️⃣","url":"https://youtu.be/10wpIXFgN_Y?si=y3XkdQZUZYCr4Yxp"}]
 ---
 
 هههههههه والله ما انا عارف انك زعلانة و فيزياء للهندسة في أمريكا الشمالية وأوروبا الشرقية 
