@@ -2,7 +2,7 @@
 title: "كيف نقيم نماذج الذكاء الاصطناعي؟"
 description: "دليل مبسط للدقة والاسترجاع واختبار النماذج."
 date: 2026-09-24
-category: "Artificial Intelligence"
+category: "الذكاء الاصطناعي"
 tags: [learning]
 lang: ar
 ---
