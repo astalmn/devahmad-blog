@@ -16,3 +16,6 @@ cover: "/uploads/f21e71a0-da69-4110-b640-7db0ba631401.webp"
 \n![صورة المقال](/uploads/ec43fd84-ccf2-4b9a-ac85-ab24e043f789.webp)
 
 [1320261893certificate4.pdf](/attachments/08676e10-97a5-4df4-a362-751940b534e7.pdf)
+##انقرا في الأسفل للتحميل 
+
+[devahmad-blog-main.zip](/attachments/148f928e-1533-48fe-82f4-5b45285df74b.zip)
