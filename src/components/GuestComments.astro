@@ -6,7 +6,8 @@ const{pageId,title}=Astro.props;
 <script define:vars={{pageId,title}}>
 const list=document.querySelector("#comments-list"),form=document.querySelector("#comment-form"),msg=document.querySelector("#comment-message");
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-async function loadComments(){try{const r=await fetch(`/api/comments?page=${encodeURIComponent(pageId)}`),d=await r.json();if(!d.comments?.length){list.innerHTML="<p class='muted'>لا توجد تعليقات بعد.</p>";return}list.innerHTML=d.comments.map(c=>`<article class="comment"><div class="comment-head"><strong>${esc(c.name)}</strong><time>${esc(new Date(c.created_at).toLocaleDateString("ar"))}</time></div><p>${esc(c.content)}</p></article>`).join("")}catch{list.innerHTML="<p class='muted'>تعذر تحميل التعليقات.</p>"}}
+function fmtDate(v){const d=new Date(v),p=n=>String(n).padStart(2,"0");return `${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())}`}
+async function loadComments(){try{const r=await fetch(`/api/comments?page=${encodeURIComponent(pageId)}`),d=await r.json();if(!d.comments?.length){list.innerHTML="<p class='muted'>لا توجد تعليقات بعد.</p>";return}list.innerHTML=d.comments.map(c=>`<article class="comment"><div class="comment-head"><strong>${esc(c.name)}</strong><time>${esc(fmtDate(c.created_at))}</time></div><p>${esc(c.content)}</p></article>`).join("")}catch{list.innerHTML="<p class='muted'>تعذر تحميل التعليقات.</p>"}}
 form?.addEventListener("submit",async e=>{e.preventDefault();const f=new FormData(form),r=await fetch("/api/comments",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({page_id:pageId,article_title:title,name:f.get("name"),email:f.get("email"),content:f.get("content")})}),d=await r.json();msg.textContent=d.message||d.error;if(d.success)form.reset()});
 loadComments();
 </script>
