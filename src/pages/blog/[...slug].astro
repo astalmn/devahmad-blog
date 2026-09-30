@@ -8,19 +8,7 @@ import type {CollectionEntry} from 'astro:content';
 export async function getStaticPaths(){return (await getCollection('blog',({data})=>data.lang==='ar'&&!data.draft)).map(post=>({params:{slug:post.id},props:{post}}));}
 const {post}=Astro.props as {post:CollectionEntry<'blog'>};
 const {Content,headings}=await render(post);
-// Rank published Arabic articles by shared tags, then category; use recency as a tie-breaker.
-const currentTags = new Set(post.data.tags.map(tag => tag.trim().toLocaleLowerCase()));
-const related = (await posts())
-  .filter(p => p.id !== post.id)
-  .map(p => {
-    const sharedTags = p.data.tags.filter(tag => currentTags.has(tag.trim().toLocaleLowerCase())).length;
-    const sameCategory = p.data.category === post.data.category;
-    return {p, score: sharedTags * 3 + (sameCategory ? 2 : 0)};
-  })
-  .filter(item => item.score > 0)
-  .sort((a,b) => b.score - a.score || b.p.data.date.getTime() - a.p.data.date.getTime())
-  .slice(0,3)
-  .map(item => item.p);
+const related=(await posts()).filter(p=>p.id!==post.id&&(p.data.category===post.data.category||p.data.tags.some(tag=>post.data.tags.includes(tag)))).slice(0,3);
 const minutes=Math.max(1,Math.ceil((post.body ?? '').split(/\s+/).length/220));
 // Extract only valid YouTube video IDs. Never embed arbitrary visitor-provided URLs.
 function youtubeId(value: string): string | null {
@@ -38,63 +26,206 @@ function youtubeId(value: string): string | null {
 }
 const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)})).filter(video => video.id !== null);
 ---
-<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><article class="wrap section"><a class="muted" href="/blog/">→ العودة إلى المدونة</a><header style="max-width:800px"><p><span class="tag">{post.data.category}</span></p><h1 style="font-size:clamp(2rem,5vw,3.4rem);line-height:1.3">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header>{post.data.cover && <figure class="article-cover" style="max-width:1000px;margin:28px 0 0"><img src={post.data.cover} alt={`صورة غلاف: ${post.data.title}`} loading="eager" decoding="async" style="display:block;width:100%;height:auto;max-height:520px;object-fit:cover;border-radius:16px" /></figure>}<div class="article-layout" style="margin-top:35px"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}?controls=1&fs=1&disablekb=0&playsinline=1&rel=0`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass" style="padding:18px"><strong>محتويات المقال</strong><nav class="toc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{related.length>0&&<section class="section"><h2 class="section-title">مقالات ذات صلة</h2><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /></article></Base>
+<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><article class="wrap section article-page"><a class="muted article-back" href="/blog/">→ العودة إلى المدونة</a><header class="article-header"><p><span class="tag">{post.data.category}</span></p><h1 class="article-title">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header><div class="article-layout"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass" style="padding:18px"><strong>محتويات المقال</strong><nav class="toc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{related.length>0&&<section class="section"><h2 class="section-title">مقالات ذات صلة</h2><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /></article></Base>
+
+<style>
+/* DevAhmad V2.2 — mobile-first article reading experience */
+.article-page{
+  --article-text:#d9e4f2;
+  --article-muted:#91a4bd;
+  --article-line:rgba(148,163,184,.20);
+  --article-panel:rgba(15,32,57,.62);
+  --accent:#60a5fa;
+  --cyan:#67e8f9;
+  --success:#4ade80;
+  --warning:#fbbf24;
+  --danger:#fb7185;
+  max-width:1180px;
+}
+.article-back{display:inline-flex;margin-bottom:1.25rem}
+.article-header{max-width:820px;margin-inline:auto;text-align:right}
+.article-title{
+  margin:.7rem 0 1rem;
+  font-size:clamp(2rem,5vw,3.35rem);
+  line-height:1.28;
+  letter-spacing:-.025em;
+}
+.article-layout{
+  display:grid;
+  grid-template-columns:minmax(0,760px) minmax(220px,280px);
+  gap:42px;
+  align-items:start;
+  justify-content:center;
+  margin-top:2.25rem;
+}
+.article-layout > .prose{min-width:0}
+.article-layout > aside{position:sticky;top:88px}
+.article-layout :global(.prose){
+  color:var(--article-text);
+  font-size:1.12rem;
+  line-height:2;
+  text-align:right;
+  overflow-wrap:break-word;
+}
+.article-layout :global(.prose p){margin:0 0 1.35rem}
+.article-layout :global(.prose h2){
+  margin:3.2rem 0 1.25rem;
+  font-size:clamp(1.75rem,3.4vw,2.35rem);
+  line-height:1.38;
+  letter-spacing:-.02em;
+  color:#eef6ff;
+}
+.article-layout :global(.prose h3){
+  margin:2.3rem 0 1rem;
+  font-size:clamp(1.35rem,2.6vw,1.7rem);
+  line-height:1.45;
+  color:#dcecff;
+}
+.article-layout :global(.prose strong){color:#f3f7fc;font-weight:750}
+.article-layout :global(.prose ul),
+.article-layout :global(.prose ol){
+  margin:1rem 0 1.6rem;
+  padding-inline-start:1.65rem;
+}
+.article-layout :global(.prose li){margin:.38rem 0;padding-inline-start:.25rem}
+.article-layout :global(.prose li::marker){color:var(--accent);font-weight:700}
+.article-layout :global(.prose a){color:#7dd3fc;text-decoration-thickness:1px;text-underline-offset:4px}
+.article-layout :global(.prose code){
+  direction:ltr;
+  unicode-bidi:embed;
+  font-size:.88em;
+}
+.article-layout :global(.prose pre){
+  direction:ltr;
+  text-align:left;
+  max-width:100%;
+  overflow:auto;
+  border:1px solid var(--article-line);
+  border-radius:14px;
+}
+.article-layout :global(.prose table){
+  width:max-content;
+  min-width:100%;
+  border-collapse:collapse;
+  font-size:.96rem;
+}
+.article-layout :global(.prose table th),
+.article-layout :global(.prose table td){
+  min-width:145px;
+  padding:.8rem .9rem;
+  vertical-align:top;
+  border:1px solid var(--article-line);
+}
+.article-layout :global(.prose table th){
+  background:rgba(37,99,235,.12);
+  color:#e7f1ff;
+  font-weight:700;
+}
+.article-layout :global(.prose table){
+  display:block;
+  overflow-x:auto;
+  overscroll-behavior-inline:contain;
+  scrollbar-width:thin;
+}
+.article-layout :global(.prose blockquote){
+  margin:1.5rem 0;
+  padding:.9rem 1.1rem;
+  border-inline-start:3px solid var(--accent);
+  background:rgba(96,165,250,.07);
+  border-radius:10px;
+}
+.article-layout :global(.prose .callout){
+  margin:1.6rem 0;
+  padding:1rem 1.05rem;
+  border:1px solid var(--article-line);
+  border-inline-start-width:4px;
+  border-radius:14px;
+  background:var(--article-panel);
+  line-height:1.85;
+}
+.article-layout :global(.prose .callout-info){border-inline-start-color:var(--accent);background:rgba(59,130,246,.09)}
+.article-layout :global(.prose .callout-tip){border-inline-start-color:var(--success);background:rgba(34,197,94,.08)}
+.article-layout :global(.prose .callout-warning){border-inline-start-color:var(--warning);background:rgba(245,158,11,.08)}
+.article-layout :global(.prose .callout-important){border-inline-start-color:var(--danger);background:rgba(244,63,94,.08)}
+.article-layout :global(.prose .text-accent){color:#7dd3fc;font-weight:700}
+.article-layout :global(.prose .text-success){color:#86efac;font-weight:700}
+.article-layout :global(.prose .text-warning){color:#fde68a;font-weight:700}
+.article-layout :global(.prose .text-danger){color:#fda4af;font-weight:700}
+.article-layout :global(.prose .text-highlight){
+  color:#fff4c2;
+  font-weight:700;
+  background:rgba(251,191,36,.16);
+  border:1px solid rgba(251,191,36,.22);
+  border-radius:.32em;
+  padding:.04em .28em;
+  box-decoration-break:clone;
+  -webkit-box-decoration-break:clone;
+}
+.article-layout :global(.prose img){
+  max-width:100%;
+  height:auto;
+  border-radius:14px;
+}
+.video-frame{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:14px}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+@media (max-width:900px){
+  .article-layout{grid-template-columns:minmax(0,1fr);gap:1.25rem}
+  .article-layout > aside{position:static;order:-1}
+}
+@media (max-width:640px){
+  .article-page{
+    width:100%;
+    padding-inline:16px;
+  }
+  .article-header{max-width:none}
+  .article-title{
+    font-size:clamp(1.85rem,8.2vw,2.35rem);
+    line-height:1.34;
+    margin:.55rem 0 .8rem;
+  }
+  .article-header > :global(.muted){font-size:.94rem;line-height:1.75}
+  .article-layout{margin-top:1.65rem}
+  .article-layout :global(.prose){
+    font-size:1.03rem;
+    line-height:1.9;
+  }
+  .article-layout :global(.prose p){margin-bottom:1.15rem}
+  .article-layout :global(.prose h2){
+    margin:2.55rem 0 1rem;
+    font-size:1.72rem;
+    line-height:1.42;
+  }
+  .article-layout :global(.prose h3){
+    margin:2rem 0 .85rem;
+    font-size:1.35rem;
+  }
+  .article-layout :global(.prose ul),
+  .article-layout :global(.prose ol){
+    padding-inline-start:1.35rem;
+    margin-bottom:1.35rem;
+  }
+  .article-layout :global(.prose .callout){
+    margin:1.35rem 0;
+    padding:.9rem .95rem;
+    border-radius:12px;
+  }
+  .article-layout :global(.prose table){
+    width:100%;
+    min-width:620px;
+    font-size:.9rem;
+  }
+  .article-layout :global(.prose table th),
+  .article-layout :global(.prose table td){
+    min-width:155px;
+    padding:.7rem .75rem;
+  }
+  .controls{gap:.55rem;flex-wrap:wrap}
+  .controls .btn{min-height:42px}
+}
+</style>
+
 <script>
 document.querySelector('#copylink')?.addEventListener('click',async()=>{await navigator.clipboard.writeText(location.href);const b=document.querySelector('#copylink');if(b)b.textContent='تم نسخ الرابط'});
 document.querySelector('#share')?.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:document.title,url:location.href})}catch{}}else{await navigator.clipboard.writeText(location.href)}});
 </script>
-<style>
-article.wrap{width:100%;max-width:1200px;margin-inline:auto;box-sizing:border-box;overflow:hidden}
-article.wrap *{box-sizing:border-box}
-.article-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:32px;align-items:start}
-.prose{min-width:0;max-width:100%;overflow-wrap:anywhere}
-.prose img,.prose video,.prose iframe,.prose svg{max-width:100%;height:auto}
-.prose pre{max-width:100%;overflow-x:auto}
-.prose code{overflow-wrap:anywhere}
-.prose table{display:block;max-width:100%;overflow-x:auto}
-.article-cover{max-width:100%!important}
-.article-cover img{max-width:100%}
-.article-videos,.article-video,.video-frame{width:100%;max-width:100%}
-.video-frame{position:relative;aspect-ratio:16/9;overflow:hidden;border-radius:14px}
-.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-.controls{display:flex;flex-wrap:wrap;gap:10px}
-aside{min-width:0}
-
-/* DevAhmad V2.0 rich article content */
-.prose :global(.dv-text-blue){color:#60a5fa;font-weight:600}
-.prose :global(.dv-text-gold){color:#fbbf24;font-weight:600}
-.prose :global(.dv-text-green){color:#4ade80;font-weight:600}
-.prose :global(.dv-text-red){color:#fb7185;font-weight:600}
-.prose :global(.dv-highlight){background:#fde68a;color:#172033;padding:.08em .32em;border-radius:.32em}
-.prose :global(.dv-callout){margin:22px 0;padding:18px 20px;border:1px solid;border-radius:16px;background:#0b1a2c;box-shadow:0 8px 28px #0002}
-.prose :global(.dv-callout strong){display:block;margin-bottom:7px;font-size:1.05rem}
-.prose :global(.dv-callout p:last-child){margin-bottom:0}
-.prose :global(.dv-info){border-color:#3b82f6;background:linear-gradient(135deg,#0b2444,#0b1a2c)}
-.prose :global(.dv-info strong){color:#93c5fd}
-.prose :global(.dv-tip){border-color:#22c55e;background:linear-gradient(135deg,#0d2c22,#0b1a2c)}
-.prose :global(.dv-tip strong){color:#86efac}
-.prose :global(.dv-warning){border-color:#f59e0b;background:linear-gradient(135deg,#30230c,#0b1a2c)}
-.prose :global(.dv-warning strong){color:#fcd34d}
-.prose :global(.dv-important){border-color:#f43f5e;background:linear-gradient(135deg,#35121b,#0b1a2c)}
-.prose :global(.dv-important strong){color:#fda4af}
-.prose :global(.dv-steps){border-color:#8b5cf6;background:linear-gradient(135deg,#21183b,#0b1a2c)}
-.prose :global(.dv-steps strong){color:#c4b5fd}
-.prose :global(table){width:100%;border-collapse:collapse;margin:24px 0;min-width:560px}
-.prose :global(th),.prose :global(td){border:1px solid rgba(120,155,200,.35);padding:11px 13px;text-align:right}
-.prose :global(th){background:rgba(59,130,246,.12);color:#bfdbfe}
-.prose :global(blockquote){margin:22px 0;padding:14px 18px;border-inline-start:4px solid #60a5fa;background:rgba(59,130,246,.08);border-radius:10px}
-.prose :global(pre){position:relative;border:1px solid rgba(96,165,250,.25);border-radius:14px;padding:18px;background:#07111f}
-@media(max-width:768px){
-article.wrap{padding-inline:16px!important;overflow:hidden}
-article.wrap header{width:100%;max-width:100%!important}
-article.wrap h1{font-size:clamp(1.75rem,8vw,2.4rem)!important;overflow-wrap:anywhere}
-.article-layout{grid-template-columns:minmax(0,1fr)!important;gap:24px}
-.prose{width:100%;max-width:100%;min-width:0}
-.prose :global(.dv-callout){padding:15px 16px;margin:18px 0}
-.prose :global(table){font-size:.9rem}
-aside{width:100%;max-width:100%}
-.article-cover{width:100%;margin-top:20px!important}
-.cards{grid-template-columns:1fr!important}
-.controls .btn{max-width:100%}
-}
-</style>
