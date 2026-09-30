@@ -58,7 +58,32 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
   justify-content:center;
   margin-top:2.25rem;
 }
-.article-layout > .prose{min-width:0}
+.article-layout > .prose{
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
+}
+.article-page,
+.article-layout,
+.article-layout > .prose{
+  box-sizing:border-box;
+}
+.article-layout :global(.table-scroll){
+  width:100%;
+  max-width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  margin:1.35rem 0 1.75rem;
+  border:1px solid var(--article-line);
+  border-radius:14px;
+}
+.article-layout :global(.table-scroll table){
+  margin:0;
+  border:0;
+}
 .article-layout > aside{position:sticky;top:88px}
 .article-layout :global(.prose){
   color:var(--article-text);
@@ -104,8 +129,8 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
   border-radius:14px;
 }
 .article-layout :global(.prose table){
-  width:max-content;
-  min-width:100%;
+  width:100%;
+  min-width:620px;
   border-collapse:collapse;
   font-size:.96rem;
 }
@@ -114,19 +139,18 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
   min-width:145px;
   padding:.8rem .9rem;
   vertical-align:top;
-  border:1px solid var(--article-line);
+  border-inline-start:1px solid var(--article-line);
+  border-bottom:1px solid var(--article-line);
 }
+.article-layout :global(.prose table tr:last-child td){border-bottom:0}
+.article-layout :global(.prose table th:first-child),
+.article-layout :global(.prose table td:first-child){border-inline-start:0}
 .article-layout :global(.prose table th){
   background:rgba(37,99,235,.12);
   color:#e7f1ff;
   font-weight:700;
 }
-.article-layout :global(.prose table){
-  display:block;
-  overflow-x:auto;
-  overscroll-behavior-inline:contain;
-  scrollbar-width:thin;
-}
+
 .article-layout :global(.prose blockquote){
   margin:1.5rem 0;
   padding:.9rem 1.1rem;
@@ -215,6 +239,10 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
     min-width:620px;
     font-size:.9rem;
   }
+  .article-layout :global(.table-scroll){
+    margin-inline:0;
+    border-radius:12px;
+  }
   .article-layout :global(.prose table th),
   .article-layout :global(.prose table td){
     min-width:155px;
@@ -226,6 +254,16 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
 </style>
 
 <script>
+document.querySelectorAll('.prose table').forEach((table)=>{
+  if(table.parentElement?.classList.contains('table-scroll')) return;
+  const wrap=document.createElement('div');
+  wrap.className='table-scroll';
+  wrap.setAttribute('role','region');
+  wrap.setAttribute('aria-label','جدول قابل للتمرير أفقيًا');
+  wrap.tabIndex=0;
+  table.parentNode?.insertBefore(wrap,table);
+  wrap.appendChild(table);
+});
 document.querySelector('#copylink')?.addEventListener('click',async()=>{await navigator.clipboard.writeText(location.href);const b=document.querySelector('#copylink');if(b)b.textContent='تم نسخ الرابط'});
 document.querySelector('#share')?.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:document.title,url:location.href})}catch{}}else{await navigator.clipboard.writeText(location.href)}});
 </script>
