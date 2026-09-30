@@ -1,6 +1,6 @@
 ---
 title: "كيف تجعل مستودع GitHub عامًا بأمان؟ قائمة فحص للمطورين"
-description: "قائمة فحص عملية قبل تحويل GitHub repository إلى Public: الأسرار و.env وسجل Git والصلاحيات والاعتماديات وCI."
+description: "قائمة فحص عملية قبل تحويل GitHub repository إلى <span class="text-accent">Public</span>: الأسرار و.env وسجل Git والصلاحيات والاعتماديات وCI."
 pubDate: "2026-10-24"
 draft: true
 scheduledAt: "2026-10-24T07:00:00Z"
@@ -11,13 +11,13 @@ tags:
   - "Open Source"
 ---
 
-تحويل المستودع إلى Public ليس مجرد تغيير Visibility. أنت تنشر الكود الحالي، وقد تكشف أيضًا معلومات في التاريخ أو الإعدادات أو ملفات البناء.
+تحويل المستودع إلى <span class="text-accent">Public</span> ليس مجرد تغيير Visibility. أنت تنشر الكود الحالي، وقد تكشف أيضًا معلومات في التاريخ أو الإعدادات أو ملفات البناء.
 
 <div class="callout callout-warning"><strong>الأولوية الأولى:</strong> إذا نُشر سر حقيقي سابقًا، حذف السطر أو الملف لا يكفي. ألغِ المفتاح أو دوّره أولًا، ثم تعامل مع التاريخ.</div>
 
 ## 1. افحص الأسرار
 
-ابحث عن API keys وtokens وكلمات المرور وprivate keys وconnection strings. تأكد أن القيم الحساسة تأتي من Environment Variables.
+ابحث عن API keys وtokens وكلمات المرور وprivate keys وconnection strings. تأكد أن القيم الحساسة تأتي من <span class="text-accent">Environment Variables</span>.
 
 ```gitignore
 .env
@@ -66,4 +66,4 @@ Token يستطيع القراءة فقط لا يجب أن يملك write. خدم
 
 راجع screenshots، fixtures، exports، قواعد البيانات التجريبية، البريد وأسماء المستخدمين. لا تستخدم بيانات إنتاج حقيقية كبيانات تجريبية.
 
-<div class="callout callout-important"><strong>قبل الضغط على Public:</strong> افترض أن روبوتًا سيقرأ المستودع فورًا. إذا كانت هناك قيمة لا تريد نشرها للعالم، يجب ألا تكون في المستودع أو تاريخه.</div>
+<div class="callout callout-important"><strong>قبل الضغط على <span class="text-accent">Public</span>:</strong> افترض أن روبوتًا سيقرأ المستودع فورًا. إذا كانت هناك قيمة لا تريد نشرها للعالم، يجب ألا تكون في المستودع أو تاريخه.</div>

@@ -1,17 +1,17 @@
 ---
-title: "7 مشاريع برمجية تبني Portfolio أقوى من عشرات الدورات"
-description: "أفكار مشاريع برمجية عملية للـPortfolio مع مستويات صعوبة وما الذي يجب أن تثبته كل فكرة لصاحب العمل أو العميل."
+title: "7 مشاريع برمجية تبني <span class="text-accent">Portfolio</span> أقوى من عشرات الدورات"
+description: "أفكار مشاريع برمجية عملية للـ<span class="text-accent">Portfolio</span> مع مستويات صعوبة وما الذي يجب أن تثبته كل فكرة لصاحب العمل أو العميل."
 pubDate: "2026-10-15"
 draft: true
 scheduledAt: "2026-10-15T07:00:00Z"
 tags:
-  - "Portfolio"
+  - "<span class="text-accent">Portfolio</span>"
   - "مشاريع برمجية"
-  - "GitHub"
+  - "<span class="text-accent">GitHub</span>"
   - "مطورين"
 ---
 
-الـPortfolio الجيد لا يقيس عدد المستودعات. يقيس قدرتك على **تحويل مشكلة إلى منتج يمكن تشغيله وفهم قراراته**.
+الـ<span class="text-accent">Portfolio</span> الجيد لا يقيس عدد المستودعات. يقيس قدرتك على <mark class="text-highlight">تحويل مشكلة إلى منتج يمكن تشغيله وفهم قراراته</mark>.
 
 <div class="callout callout-important"><strong>قبل القائمة:</strong> ثلاثة مشاريع مكتملة وموثقة أفضل عادة من عشرين مشروعًا منسوخًا من دورات.</div>
 

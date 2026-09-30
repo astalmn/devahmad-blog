@@ -1,19 +1,19 @@
 ---
-title: "Frontend أم Backend أم Full-Stack؟ الفرق وكيف تختار مسارك"
-description: "مقارنة عملية بين Frontend وBackend وFull-Stack من حيث المهام والمهارات والمشاريع، لمساعدتك على فهم المسارات دون تشتت."
+title: "<span class="text-accent">Frontend</span> أم <span class="text-success">Backend</span> أم <span class="text-warning">Full-Stack</span>؟ الفرق وكيف تختار مسارك"
+description: "مقارنة عملية بين <span class="text-accent">Frontend</span> و<span class="text-success">Backend</span> و<span class="text-warning">Full-Stack</span> من حيث المهام والمهارات والمشاريع، لمساعدتك على فهم المسارات دون تشتت."
 pubDate: "2026-10-09"
 draft: true
 scheduledAt: "2026-10-09T07:00:00Z"
 tags:
-  - "Frontend"
-  - "Backend"
+  - "<span class="text-accent">Frontend</span>"
+  - "<span class="text-success">Backend</span>"
   - "Full Stack"
   - "Web Development"
 ---
 
-هذه المصطلحات تصف **مكان مسؤوليتك داخل تطبيق الويب**، لا مستوى المطور. يمكن أن يكون مطور Frontend متخصصًا أعمق من مطور Full-Stack والعكس صحيح.
+هذه المصطلحات تصف <mark class="text-highlight">مكان مسؤوليتك داخل تطبيق الويب</mark>، لا مستوى المطور. يمكن أن يكون مطور <span class="text-accent">Frontend</span> متخصصًا أعمق من مطور <span class="text-warning">Full-Stack</span> والعكس صحيح.
 
-## Frontend
+## <span class="text-accent">Frontend</span>
 
 هو الجزء الذي يتفاعل معه المستخدم في المتصفح: الواجهات، النماذج، الحالات، الوصول Accessibility، الأداء وتجربة الاستخدام.
 
@@ -23,7 +23,7 @@ tags:
 HTML → CSS → JavaScript/TypeScript → Framework → Testing
 ```
 
-## Backend
+## <span class="text-success">Backend</span>
 
 يتعامل مع منطق الخادم، قواعد البيانات، المصادقة، الصلاحيات، APIs، المهام الخلفية، الأداء والأمان.
 
@@ -31,11 +31,11 @@ HTML → CSS → JavaScript/TypeScript → Framework → Testing
 HTTP → Language/Runtime → API → SQL → Auth → Testing → Deployment
 ```
 
-## Full-Stack
+## <span class="text-warning">Full-Stack</span>
 
 يعني القدرة على العمل عبر الجانبين ضمن نطاق مشروع. لا يعني أنك خبير في كل تقنية.
 
-| جانب | Frontend | Backend | Full-Stack |
+| جانب | <span class="text-accent">Frontend</span> | <span class="text-success">Backend</span> | <span class="text-warning">Full-Stack</span> |
 |---|---|---|---|
 | UI | أساسي | محدود | مطلوب |
 | قواعد البيانات | محدود | أساسي | مطلوب |
@@ -43,19 +43,19 @@ HTTP → Language/Runtime → API → SQL → Auth → Testing → Deployment
 | المتصفح | عميق | محدود | متوسط/عميق |
 | الخادم | محدود | عميق | متوسط/عميق |
 
-<div class="callout callout-tip"><strong>طريقة الاختيار:</strong> إذا كنت تستمتع بالتفاصيل البصرية والتفاعل ابدأ Frontend. إذا تستمتع بالبيانات والمنطق والأنظمة ابدأ Backend. إذا تريد بناء منتج كامل وحدك، تعلم أحدهما أولًا ثم وسّع إلى الآخر.</div>
+<div class="callout callout-tip"><strong>طريقة الاختيار:</strong> إذا كنت تستمتع بالتفاصيل البصرية والتفاعل ابدأ <span class="text-accent">Frontend</span>. إذا تستمتع بالبيانات والمنطق والأنظمة ابدأ <span class="text-success">Backend</span>. إذا تريد بناء منتج كامل وحدك، تعلم أحدهما أولًا ثم وسّع إلى الآخر.</div>
 
 ## لا تبدأ بكل شيء معًا
 
-تعلم React وNode وPostgreSQL وDocker وKubernetes في الأسبوع نفسه لا يجعلك Full-Stack. غالبًا يجعلك تتعامل مع ستة مصادر أخطاء في وقت واحد.
+تعلم React وNode وPostgreSQL وDocker وKubernetes في الأسبوع نفسه لا يجعلك <span class="text-warning">Full-Stack</span>. غالبًا يجعلك تتعامل مع ستة مصادر أخطاء في وقت واحد.
 
-<div class="callout callout-warning"><strong>تحذير:</strong> كلمة Full-Stack في إعلان وظيفة لا تعني دائمًا المتطلبات نفسها. اقرأ المهام والتقنيات الفعلية بدل الاعتماد على المسمى.</div>
+<div class="callout callout-warning"><strong>تحذير:</strong> كلمة <span class="text-warning">Full-Stack</span> في إعلان وظيفة لا تعني دائمًا المتطلبات نفسها. اقرأ المهام والتقنيات الفعلية بدل الاعتماد على المسمى.</div>
 
 ## مشروع يختبر المسارات الثلاثة
 
 ابنِ تطبيق ملاحظات بحساب مستخدم:
-1. Frontend: تسجيل الدخول، القائمة، المحرر.
-2. Backend: API وصلاحيات المستخدم.
+1. <span class="text-accent">Frontend</span>: تسجيل الدخول، القائمة، المحرر.
+2. <span class="text-success">Backend</span>: API وصلاحيات المستخدم.
 3. Database: المستخدمون والملاحظات.
 4. Deployment: نشر الواجهة والخادم.
 5. Testing: اختبر الصلاحيات والحالات الفاشلة.
