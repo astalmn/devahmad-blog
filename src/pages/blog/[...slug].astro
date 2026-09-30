@@ -38,86 +38,12 @@ function youtubeId(value: string): string | null {
 }
 const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)})).filter(video => video.id !== null);
 ---
-<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><div class="reading-progress" aria-hidden="true"><span id="reading-progress-bar"></span></div><article class="wrap section"><a class="muted" href="/blog/">→ العودة إلى المدونة</a><header style="max-width:800px"><p><span class="tag">{post.data.category}</span></p><h1 style="font-size:clamp(2rem,5vw,3.4rem);line-height:1.3">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header>{post.data.cover && <figure class="article-cover" style="max-width:1000px;margin:28px 0 0"><img src={post.data.cover} alt={`صورة غلاف: ${post.data.title}`} loading="eager" decoding="async" style="display:block;width:100%;height:auto;max-height:520px;object-fit:cover;border-radius:16px" /></figure>}<div class="article-layout" style="margin-top:35px"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}?controls=1&fs=1&disablekb=0&playsinline=1&rel=0`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass toc-card" style="padding:18px"><button class="toc-toggle" id="toc-toggle" type="button" aria-expanded="false" aria-controls="article-toc"><span>محتويات المقال</span><span class="toc-chevron" aria-hidden="true">⌄</span></button><strong class="toc-title">محتويات المقال</strong><nav class="toc" id="article-toc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{related.length>0&&<section class="section"><h2 class="section-title">مقالات ذات صلة</h2><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /></article></Base>
+<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><article class="wrap section"><a class="muted" href="/blog/">→ العودة إلى المدونة</a><header style="max-width:800px"><p><span class="tag">{post.data.category}</span></p><h1 style="font-size:clamp(2rem,5vw,3.4rem);line-height:1.3">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header>{post.data.cover && <figure class="article-cover" style="max-width:1000px;margin:28px 0 0"><img src={post.data.cover} alt={`صورة غلاف: ${post.data.title}`} loading="eager" decoding="async" style="display:block;width:100%;height:auto;max-height:520px;object-fit:cover;border-radius:16px" /></figure>}<div class="article-layout" style="margin-top:35px"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}?controls=1&fs=1&disablekb=0&playsinline=1&rel=0`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass" style="padding:18px"><strong>محتويات المقال</strong><nav class="toc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{related.length>0&&<section class="section"><h2 class="section-title">مقالات ذات صلة</h2><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /></article></Base>
 <script>
-const copyLink=document.querySelector('#copylink');
-copyLink?.addEventListener('click',async()=>{await navigator.clipboard.writeText(location.href);copyLink.textContent='تم نسخ الرابط';setTimeout(()=>copyLink.textContent='نسخ الرابط',1600)});
+document.querySelector('#copylink')?.addEventListener('click',async()=>{await navigator.clipboard.writeText(location.href);const b=document.querySelector('#copylink');if(b)b.textContent='تم نسخ الرابط'});
 document.querySelector('#share')?.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:document.title,url:location.href})}catch{}}else{await navigator.clipboard.writeText(location.href)}});
-
-const article=document.querySelector('article.wrap');
-const progressBar=document.querySelector('#reading-progress-bar');
-function updateReadingProgress(){
-  if(!article||!progressBar)return;
-  const rect=article.getBoundingClientRect();
-  const start=window.scrollY+rect.top;
-  const end=start+article.scrollHeight-window.innerHeight;
-  const value=end<=start?100:Math.min(100,Math.max(0,((window.scrollY-start)/(end-start))*100));
-  progressBar.style.width=`${value}%`;
-}
-updateReadingProgress();
-addEventListener('scroll',updateReadingProgress,{passive:true});
-addEventListener('resize',updateReadingProgress);
-
-const tocToggle=document.querySelector('#toc-toggle');
-const toc=document.querySelector('#article-toc');
-tocToggle?.addEventListener('click',()=>{
-  const open=tocToggle.getAttribute('aria-expanded')==='true';
-  tocToggle.setAttribute('aria-expanded',String(!open));
-  toc?.classList.toggle('is-open',!open);
-});
-toc?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{
-  if(matchMedia('(max-width: 768px)').matches){toc?.classList.remove('is-open');tocToggle?.setAttribute('aria-expanded','false')}
-}));
-
-const tocLinks=[...document.querySelectorAll('#article-toc a')];
-const headingMap=tocLinks.map(link=>{const id=decodeURIComponent(link.getAttribute('href')?.slice(1)||'');return {link,heading:document.getElementById(id)}}).filter(item=>item.heading);
-if(headingMap.length){
-  const observer=new IntersectionObserver(entries=>{
-    const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
-    if(!visible)return;
-    tocLinks.forEach(link=>link.removeAttribute('aria-current'));
-    headingMap.find(item=>item.heading===visible.target)?.link.setAttribute('aria-current','location');
-  },{rootMargin:'-18% 0px -68% 0px',threshold:0});
-  headingMap.forEach(item=>observer.observe(item.heading));
-}
-
-const languageLabels={js:'JavaScript',javascript:'JavaScript',ts:'TypeScript',typescript:'TypeScript',html:'HTML',css:'CSS',python:'Python',py:'Python',bash:'Bash',shell:'Shell',sh:'Shell',json:'JSON',astro:'Astro',md:'Markdown',markdown:'Markdown',sql:'SQL'};
-document.querySelectorAll('.prose pre').forEach((pre,index)=>{
-  if(pre.closest('.code-block'))return;
-  const code=pre.querySelector('code');
-  const match=[...(code?.classList||[])].find(c=>c.startsWith('language-'));
-  const raw=match?.replace('language-','')||'';
-  const language=languageLabels[raw]||raw||'Code';
-  const wrapper=document.createElement('div');
-  wrapper.className='code-block';
-  const header=document.createElement('div');
-  header.className='code-header';
-  const label=document.createElement('span');label.textContent=language;
-  const button=document.createElement('button');button.type='button';button.className='code-copy';button.setAttribute('aria-label',`نسخ الكود ${index+1}`);button.textContent='نسخ';
-  button.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(code?.textContent||pre.textContent||'');button.textContent='تم النسخ';setTimeout(()=>button.textContent='نسخ',1600)}catch{button.textContent='تعذر النسخ'}});
-  header.append(label,button);
-  pre.parentNode?.insertBefore(wrapper,pre);wrapper.append(header,pre);
-});
 </script>
 <style>
-
-.reading-progress{position:fixed;inset:0 0 auto 0;height:3px;z-index:999;background:rgba(7,18,37,.5);pointer-events:none}
-.reading-progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,#36c8ff,#5b8cff);transition:width .08s linear}
-.toc-card{position:sticky;top:20px}
-.toc-toggle{display:none}
-.toc a{border-inline-start:2px solid transparent;padding-inline-start:10px;transition:color .18s,border-color .18s,background .18s}
-.toc a[aria-current="location"]{color:#70dfff;border-inline-start-color:#36c8ff;background:rgba(54,200,255,.07);border-radius:6px}
-.prose h2,.prose h3{scroll-margin-top:28px}
-.prose figure{margin:1.8rem 0}
-.prose img{display:block;margin:1.6rem auto;border-radius:14px;border:1px solid #29466a;box-shadow:0 14px 34px rgba(0,0,0,.18)}
-.prose figcaption{text-align:center;color:#a9bed9;font-size:.9rem;margin-top:-.8rem}
-.prose table{border-collapse:collapse;border-radius:12px;margin:1.5rem 0;background:#0a192c}
-.prose th{background:#102848;color:#eaf2ff}
-.code-block{direction:ltr;text-align:left;margin:1.6rem 0;border:1px solid #27476b;border-radius:14px;overflow:hidden;background:#0a192c}
-.code-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 12px;background:#102848;border-bottom:1px solid #27476b;color:#a9bed9;font:600 .82rem/1.4 system-ui,sans-serif}
-.code-copy{border:1px solid #355b82;border-radius:8px;background:#0d203a;color:#eaf2ff;padding:5px 11px;font:700 .8rem/1.4 system-ui,sans-serif}
-.code-copy:hover{border-color:#4bd7ff;color:#fff}
-.code-block pre{margin:0!important;border:0!important;border-radius:0!important;background:transparent!important}
 article.wrap{width:100%;max-width:1200px;margin-inline:auto;box-sizing:border-box;overflow:hidden}
 article.wrap *{box-sizing:border-box}
 .article-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:32px;align-items:start}
@@ -133,23 +59,39 @@ article.wrap *{box-sizing:border-box}
 .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .controls{display:flex;flex-wrap:wrap;gap:10px}
 aside{min-width:0}
-@media(max-width:768px){
-.toc-card{position:static;padding:0!important;overflow:hidden}
-.toc-title{display:none}
-.toc-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;border:0;background:transparent;color:#eaf2ff;padding:16px 18px;font-weight:800;text-align:right}
-.toc-chevron{font-size:1.25rem;transition:transform .18s}
-.toc-toggle[aria-expanded="true"] .toc-chevron{transform:rotate(180deg)}
-.toc{display:none;padding:0 18px 16px}
-.toc.is-open{display:block}
-.toc a{padding-block:7px}
-.code-header{position:sticky;left:0}
-.code-block pre{font-size:.88rem}
 
+/* DevAhmad V2.0 rich article content */
+.prose :global(.dv-text-blue){color:#60a5fa;font-weight:600}
+.prose :global(.dv-text-gold){color:#fbbf24;font-weight:600}
+.prose :global(.dv-text-green){color:#4ade80;font-weight:600}
+.prose :global(.dv-text-red){color:#fb7185;font-weight:600}
+.prose :global(.dv-highlight){background:#fde68a;color:#172033;padding:.08em .32em;border-radius:.32em}
+.prose :global(.dv-callout){margin:22px 0;padding:18px 20px;border:1px solid;border-radius:16px;background:#0b1a2c;box-shadow:0 8px 28px #0002}
+.prose :global(.dv-callout strong){display:block;margin-bottom:7px;font-size:1.05rem}
+.prose :global(.dv-callout p:last-child){margin-bottom:0}
+.prose :global(.dv-info){border-color:#3b82f6;background:linear-gradient(135deg,#0b2444,#0b1a2c)}
+.prose :global(.dv-info strong){color:#93c5fd}
+.prose :global(.dv-tip){border-color:#22c55e;background:linear-gradient(135deg,#0d2c22,#0b1a2c)}
+.prose :global(.dv-tip strong){color:#86efac}
+.prose :global(.dv-warning){border-color:#f59e0b;background:linear-gradient(135deg,#30230c,#0b1a2c)}
+.prose :global(.dv-warning strong){color:#fcd34d}
+.prose :global(.dv-important){border-color:#f43f5e;background:linear-gradient(135deg,#35121b,#0b1a2c)}
+.prose :global(.dv-important strong){color:#fda4af}
+.prose :global(.dv-steps){border-color:#8b5cf6;background:linear-gradient(135deg,#21183b,#0b1a2c)}
+.prose :global(.dv-steps strong){color:#c4b5fd}
+.prose :global(table){width:100%;border-collapse:collapse;margin:24px 0;min-width:560px}
+.prose :global(th),.prose :global(td){border:1px solid rgba(120,155,200,.35);padding:11px 13px;text-align:right}
+.prose :global(th){background:rgba(59,130,246,.12);color:#bfdbfe}
+.prose :global(blockquote){margin:22px 0;padding:14px 18px;border-inline-start:4px solid #60a5fa;background:rgba(59,130,246,.08);border-radius:10px}
+.prose :global(pre){position:relative;border:1px solid rgba(96,165,250,.25);border-radius:14px;padding:18px;background:#07111f}
+@media(max-width:768px){
 article.wrap{padding-inline:16px!important;overflow:hidden}
 article.wrap header{width:100%;max-width:100%!important}
 article.wrap h1{font-size:clamp(1.75rem,8vw,2.4rem)!important;overflow-wrap:anywhere}
 .article-layout{grid-template-columns:minmax(0,1fr)!important;gap:24px}
 .prose{width:100%;max-width:100%;min-width:0}
+.prose :global(.dv-callout){padding:15px 16px;margin:18px 0}
+.prose :global(table){font-size:.9rem}
 aside{width:100%;max-width:100%}
 .article-cover{width:100%;margin-top:20px!important}
 .cards{grid-template-columns:1fr!important}
