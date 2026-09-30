@@ -1,57 +1,64 @@
 ---
-title: "لماذا أصبح TypeScript في صدارة GitHub؟ وما الذي يعنيه للمطور في 2026؟"
-description: "قراءة عملية لصعود TypeScript إلى المركز الأول على GitHub وعلاقة الأنواع بالبرمجة المدعومة بالذكاء الاصطناعي، ومتى يستحق تعلمه."
-date: 2026-10-06
-category: "اتجاهات تقنية"
-tags: [TypeScript, JavaScript, GitHub, AI]
-lang: ar
+title: "TypeScript تتصدر GitHub: ماذا يعني ذلك للمطور في 2026؟"
+description: "شرح عملي لصعود TypeScript على GitHub في بيانات 2025، ولماذا تفيد الأنواع الثابتة في مشاريع الويب والعمل مع أدوات الذكاء الاصطناعي."
+pubDate: "2026-10-06"
 draft: true
-scheduledAt: 2026-10-06T07:00:00Z
-featured: true
+scheduledAt: "2026-10-06T07:00:00Z"
+tags:
+  - "TypeScript"
+  - "JavaScript"
+  - "GitHub"
+  - "Web Development"
 ---
 
-شهدت منظومة البرمجة تحولًا مهمًا: وفق GitHub Octoverse، تجاوز TypeScript كلًا من Python وJavaScript في أغسطس 2025 ليصبح اللغة الأكثر استخدامًا على GitHub وفق مقياس المساهمين الشهريين.
+في بيانات GitHub Octoverse لعام 2025، تجاوزت **TypeScript** كلًا من Python وJavaScript في عدد المساهمين على GitHub خلال أغسطس 2025. هذه نتيجة مرتبطة بمنهجية GitHub وليست حكمًا بأن TypeScript هي «أفضل لغة» لكل استخدام.
 
-هذا لا يعني أن TypeScript «أفضل لغة لكل شيء»، لكنه مؤشر يستحق الفهم.
+<div class="callout callout-info"><strong>السياق مهم:</strong> ترتيب اللغات يختلف حسب المنهجية. GitHub يقيس نشاطًا على منصته، بينما مؤشرات أخرى قد تقيس البحث أو الاستبيانات أو سوق الوظائف.</div>
 
-## لماذا ينمو TypeScript؟
+## لماذا TypeScript مهمة؟
 
-مشاريع JavaScript الحديثة أصبحت أكبر وأكثر تعقيدًا، والأنواع تساعد على كشف فئة من الأخطاء قبل التشغيل. كما أن كثيرًا من أطر الويب الحديثة تدعم TypeScript مباشرة.
-
-GitHub يربط أيضًا هذا الصعود بازدياد البرمجة المدعومة بالذكاء الاصطناعي: وجود عقود وأنواع صريحة يعطي المطور والأداة الآلية قيودًا أوضح عند تعديل الكود.
-
-## هل انتهى JavaScript؟
-
-لا. TypeScript يُبنى فوق منظومة JavaScript ويُحوّل في النهاية إلى JavaScript. فهم JavaScript نفسه ما زال أساسيًا لمطور الويب.
-
-## وماذا عن Python؟
-
-Python ما زالت قوية جدًا، خصوصًا في الذكاء الاصطناعي وعلوم البيانات والأتمتة. المقارنة ليست مباراة بخاسر واحد؛ الاستخدام يعتمد على المجال.
-
-## هل يجب أن يتعلمه المبتدئ؟
-
-إذا كان هدفك تطوير الويب، تعلّم JavaScript أولًا حتى تفهم اللغة والمتصفح، ثم أضف TypeScript. الانتقال سيكون أكثر معنى عندما تعرف المشكلة التي تحلها الأنواع.
-
-## مثال بسيط
+TypeScript تضيف نظام أنواع فوق JavaScript، ما يسمح باكتشاف فئة من الأخطاء أثناء التطوير قبل تشغيل التطبيق.
 
 ```ts
-interface User {
+type User = {
   id: number;
   name: string;
-}
+};
 
-function greeting(user: User): string {
-  return `مرحبًا ${user.name}`;
+function greeting(user: User) {
+  return `Hello ${user.name}`;
 }
 ```
 
-الفائدة ليست كتابة `: string` في كل مكان، بل جعل شكل البيانات والعقود أوضح داخل المشروع.
+إذا مررت قيمة لا تطابق `User`، يستطيع المحرر والمترجم تنبيهك مبكرًا.
 
-## ما الذي يعنيه ذلك في 2026؟
+## لماذا زاد استخدامها؟
 
-إذا كنت تعمل على تطبيقات JavaScript متوسطة أو كبيرة، أو ضمن فريق، أو تستخدم AI بكثافة في تعديل الكود، فإن تعلم TypeScript استثمار منطقي. لكن لا تستخدمه كبديل عن فهم JavaScript أو الاختبارات.
+بحسب GitHub، أضافت TypeScript أكثر من مليون مساهم خلال فترة القياس في 2025، وربط التقرير نموها بانتشار المشاريع الحديثة وباستخدام أدوات البرمجة المدعومة بالذكاء الاصطناعي.
 
-## مصادر
+لكن هناك تفسير هندسي مباشر أيضًا: الأنواع تجعل العقود بين أجزاء المشروع أوضح، خصوصًا عندما يكبر الفريق أو الكود.
 
-- [GitHub Octoverse 2025](https://github.blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/)
-- [GitHub: أسرع الأدوات نموًا في 2026](https://github.blog/news-insights/octoverse/what-the-fastest-growing-tools-reveal-about-how-software-is-being-built/)
+## هل أبدأ بـ TypeScript أم JavaScript؟
+
+إذا كنت جديدًا تمامًا على الويب، يجب أن تفهم نموذج JavaScript نفسه: الدوال، الكائنات، async/await، DOM، modules. يمكنك تعلم ذلك داخل TypeScript بدل قضاء أشهر منفصلة في كل لغة.
+
+| الحالة | اقتراح عملي |
+|---|---|
+| أول أسبوع في البرمجة | ركز على المفاهيم |
+| مشروع ويب حديث | TypeScript خيار قوي |
+| كود JavaScript قائم | أضف TypeScript تدريجيًا |
+| سكربت سريع جدًا | JavaScript قد يكون كافيًا |
+
+<div class="callout callout-tip"><strong>نصيحة:</strong> لا تجعل TypeScript مجرد إضافة أنواع لكل متغير. تعلم interfaces/types وunions وgenerics وnarrowing وكيفية تصميم حدود واضحة للبيانات.</div>
+
+## TypeScript والـAI
+
+الأنواع لا تجعل الكود المولد آليًا صحيحًا تلقائيًا، لكنها توفر قيودًا يمكن للأدوات والمترجم استخدامها لاكتشاف تناقضات مبكرًا.
+
+<div class="callout callout-warning"><strong>لا تخلط بين قابلية التحقق والصحة:</strong> كود TypeScript قد يمر من فحص الأنواع ويظل يحتوي على خطأ منطقي أو أمني.</div>
+
+## هل تستحق التعلم في 2026؟
+
+إذا كان مسارك Frontend أو Full-Stack ضمن منظومة JavaScript، فهي مهارة عملية جدًا. أما إن كان هدفك تحليل البيانات أو تعلم الآلة، فقد يكون Python أكثر ارتباطًا بعملك اليومي.
+
+<div class="callout callout-important"><strong>المصدر:</strong> الأرقام والمرتبة المذكورة هنا مبنية على GitHub Octoverse 2025، وليست ترتيبًا عالميًا مطلقًا للغات البرمجة.</div>
