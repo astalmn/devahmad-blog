@@ -1,16 +1,13 @@
 ---
 title: "كيف تجعل مستودع GitHub عامًا بأمان؟ قائمة فحص للمطورين"
-description: "قائمة فحص عملية قبل تحويل GitHub repository إلى <span class="text-accent">Public</span>: الأسرار و.env وسجل Git والصلاحيات والاعتماديات وCI."
-pubDate: "2026-10-24"
+description: "قائمة فحص عملية قبل تحويل GitHub repository إلى Public: الأسرار و.env وسجل Git والصلاحيات والاعتماديات وCI."
+date: 2026-10-24
+category: "الأمن البرمجي"
+tags: ["GitHub", "Security", "Git", "Open Source"]
+lang: ar
 draft: true
 scheduledAt: "2026-10-24T07:00:00Z"
-tags:
-  - "GitHub"
-  - "Security"
-  - "Git"
-  - "Open Source"
 ---
-
 تحويل المستودع إلى <span class="text-accent">Public</span> ليس مجرد تغيير Visibility. أنت تنشر الكود الحالي، وقد تكشف أيضًا معلومات في التاريخ أو الإعدادات أو ملفات البناء.
 
 <div class="callout callout-warning"><strong>الأولوية الأولى:</strong> إذا نُشر سر حقيقي سابقًا، حذف السطر أو الملف لا يكفي. ألغِ المفتاح أو دوّره أولًا، ثم تعامل مع التاريخ.</div>

@@ -1,16 +1,13 @@
 ---
-title: "<span class="text-accent">Frontend</span> أم <span class="text-success">Backend</span> أم <span class="text-warning">Full-Stack</span>؟ الفرق وكيف تختار مسارك"
-description: "مقارنة عملية بين <span class="text-accent">Frontend</span> و<span class="text-success">Backend</span> و<span class="text-warning">Full-Stack</span> من حيث المهام والمهارات والمشاريع، لمساعدتك على فهم المسارات دون تشتت."
-pubDate: "2026-10-09"
+title: "Frontend أم Backend أم Full-Stack؟ الفرق وكيف تختار مسارك"
+description: "مقارنة عملية بين Frontend وBackend وFull-Stack من حيث المهام والمهارات والمشاريع، لمساعدتك على فهم المسارات دون تشتت."
+date: 2026-10-09
+category: "مسارات البرمجة"
+tags: ["Frontend", "Backend", "Full Stack", "Web Development"]
+lang: ar
 draft: true
 scheduledAt: "2026-10-09T07:00:00Z"
-tags:
-  - "<span class="text-accent">Frontend</span>"
-  - "<span class="text-success">Backend</span>"
-  - "Full Stack"
-  - "Web Development"
 ---
-
 هذه المصطلحات تصف <mark class="text-highlight">مكان مسؤوليتك داخل تطبيق الويب</mark>، لا مستوى المطور. يمكن أن يكون مطور <span class="text-accent">Frontend</span> متخصصًا أعمق من مطور <span class="text-warning">Full-Stack</span> والعكس صحيح.
 
 ## <span class="text-accent">Frontend</span>

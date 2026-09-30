@@ -1,16 +1,13 @@
 ---
 title: "TypeScript تتصدر GitHub: ماذا يعني ذلك للمطور في 2026؟"
 description: "شرح عملي لصعود TypeScript على GitHub في بيانات 2025، ولماذا تفيد الأنواع الثابتة في مشاريع الويب والعمل مع أدوات الذكاء الاصطناعي."
-pubDate: "2026-10-06"
+date: 2026-10-06
+category: "تقنيات الويب"
+tags: ["TypeScript", "JavaScript", "GitHub", "Web Development"]
+lang: ar
 draft: true
 scheduledAt: "2026-10-06T07:00:00Z"
-tags:
-  - "TypeScript"
-  - "JavaScript"
-  - "GitHub"
-  - "Web Development"
 ---
-
 في بيانات GitHub Octoverse لعام 2025، تجاوزت <span class="text-accent">TypeScript</span> كلًا من <span class="text-accent">Python وJavaScript</span> في عدد المساهمين على GitHub خلال أغسطس 2025. هذه نتيجة مرتبطة بمنهجية GitHub وليست حكمًا بأن TypeScript هي «أفضل لغة» لكل استخدام.
 
 <div class="callout callout-info"><strong>السياق مهم:</strong> ترتيب اللغات يختلف حسب المنهجية. GitHub يقيس نشاطًا على منصته، بينما مؤشرات أخرى قد تقيس البحث أو الاستبيانات أو سوق الوظائف.</div>

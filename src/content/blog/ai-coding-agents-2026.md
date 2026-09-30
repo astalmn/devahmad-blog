@@ -1,16 +1,13 @@
 ---
 title: "AI Coding Agents في 2026: ما هي ومتى تستخدمها كمطور؟"
 description: "شرح AI Coding Agents للمطورين، الفرق بينها وبين مساعدات الكود، الاستخدامات المناسبة والمخاطر وكيفية مراجعة التغييرات."
-pubDate: "2026-10-18"
+date: 2026-10-18
+category: "الذكاء الاصطناعي"
+tags: ["AI Agents", "Coding Agents", "AI", "Software Engineering"]
+lang: ar
 draft: true
 scheduledAt: "2026-10-18T07:00:00Z"
-tags:
-  - "AI Agents"
-  - "Coding Agents"
-  - "AI"
-  - "Software Engineering"
 ---
-
 مساعد الكود يقترح سطرًا أو يجيب عن سؤال. <span class="text-accent">Coding Agent</span> يستطيع عادة التعامل مع مهمة متعددة الخطوات: قراءة ملفات، اقتراح خطة، تعديل أجزاء مترابطة، تشغيل أدوات أو اختبارات، ثم تقديم نتيجة للمراجعة.
 
 هذا لا يعني أن الوكيل يعمل بلا إشراف أو أن كل فريق يستخدمه. استطلاع Stack Overflow 2025 وجد أن غالبية المطورين لا يستخدمون AI agents بعد أو يلتزمون بأدوات أبسط.
