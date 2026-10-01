@@ -11,7 +11,10 @@ const nav=[{href:'/',text:labels.home},{href:'/blog/',text:labels.blog},{href:'/
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<meta name="description" content={description}/><meta name="theme-color" content="#071225"/>
+<meta name="description" content={description}/><meta name="theme-color" content="#071225" id="themeColor"/>
+<script is:inline>
+(()=>{try{const saved=localStorage.getItem('devahmad-theme');const system=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';const theme=saved==='light'||saved==='dark'?saved:system;document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',theme==='light'?'#f4f7fb':'#071225')}catch{document.documentElement.dataset.theme='dark'}})();
+</script>
 <title>{title===site.name?site.name:`${title} | ${site.name}`}</title>
 <link rel="canonical" href={canonical}/><link rel="alternate" type="application/rss+xml" title="DevAhmad RSS" href="/rss.xml"/>
 <meta property="og:type" content={type}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:image" content={og}/><meta property="og:site_name" content={site.name}/><meta property="og:locale" content="ar_AR"/>
@@ -20,7 +23,10 @@ const nav=[{href:'/',text:labels.home},{href:'/blog/',text:labels.blog},{href:'/
 </head>
 <body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>
-<header class="site-header"><div class="wrap header-inner"><a class="brand" href="/" aria-label="DevAhmad الرئيسية"><span>Dev</span>Ahmad</a><nav aria-label="القائمة الرئيسية" class="main-nav">{nav.map(item=><a href={item.href} aria-current={Astro.url.pathname===item.href?'page':undefined}>{item.text}</a>)}</nav></div></header>
+<header class="site-header"><div class="wrap header-inner"><a class="brand" href="/" aria-label="DevAhmad الرئيسية"><span>Dev</span>Ahmad</a><div class="header-actions"><nav aria-label="القائمة الرئيسية" class="main-nav">{nav.map(item=><a href={item.href} aria-current={Astro.url.pathname===item.href?'page':undefined}>{item.text}</a>)}</nav><button class="theme-toggle" id="themeToggle" type="button" aria-label="تبديل المظهر" title="تبديل الوضع الفاتح والداكن"><span class="theme-icon" aria-hidden="true">☀️</span><span class="theme-label">فاتح</span></button></div></div></header>
 <main id="main"><slot/></main>
 <footer class="site-footer"><div class="wrap footer-inner"><div><a class="brand" href="/"><span>Dev</span>Ahmad</a><p class="muted">أفكار برمجية وأنظمة أذكى.</p></div><div class="footer-links"><a href="/contact/">تواصل</a><a href="/privacy/">الخصوصية</a><a href="/rss.xml">RSS</a><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a></div><small class="muted">© {new Date().getFullYear()} DevAhmad</small></div></footer>
+<script is:inline>
+(()=>{const root=document.documentElement;const btn=document.getElementById('themeToggle');if(!btn)return;const icon=btn.querySelector('.theme-icon');const label=btn.querySelector('.theme-label');const meta=document.querySelector('meta[name="theme-color"]');function paint(){const light=root.dataset.theme==='light';if(icon)icon.textContent=light?'🌙':'☀️';if(label)label.textContent=light?'داكن':'فاتح';btn.setAttribute('aria-pressed',String(light));btn.setAttribute('title',light?'التبديل إلى الوضع الداكن':'التبديل إلى الوضع الفاتح');if(meta)meta.setAttribute('content',light?'#f4f7fb':'#071225')}paint();btn.addEventListener('click',()=>{const next=root.dataset.theme==='light'?'dark':'light';root.dataset.theme=next;root.style.colorScheme=next;localStorage.setItem('devahmad-theme',next);paint()})})();
+</script>
 </body></html>
