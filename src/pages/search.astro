@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { posts, articleUrl } from '../lib/site';
+
+const articles = await posts();
+const projects = await getCollection('projects', ({ data }) => data.lang === 'ar');
+const resources = [
+  {name:'توثيق Astro',url:'https://docs.astro.build/',desc:'بناء مواقع سريعة تعتمد على المحتوى.',tags:'Astro Web'},
+  {name:'دليل TypeScript',url:'https://www.typescriptlang.org/docs/handbook/intro.html',desc:'المرجع الرسمي لتعلم TypeScript.',tags:'TypeScript Programming'},
+  {name:'MDN Web Docs',url:'https://developer.mozilla.org/',desc:'مراجع HTML وCSS وJavaScript.',tags:'HTML CSS JavaScript Web'},
+  {name:'OWASP',url:'https://owasp.org/www-project-top-ten/',desc:'إرشادات أمن تطبيقات الويب.',tags:'Security OWASP'},
+  {name:'Phaser',url:'https://docs.phaser.io/',desc:'توثيق محرك ألعاب HTML5.',tags:'Phaser Games HTML5'},
+  {name:'GitHub Docs',url:'https://docs.github.com/',desc:'إدارة الإصدارات والتعاون البرمجي.',tags:'GitHub Git'}
+];
+---
+<Base title="البحث" description="ابحث في مقالات ومشاريع ومصادر DevAhmad.">
+<section class="wrap section search-page">
+  <div class="search-head">
+    <span class="eyebrow">Search & Discovery</span>
+    <h1 class="section-title">ابحث في DevAhmad</h1>
+    <p class="muted">بحث فوري في المقالات والمشاريع والمصادر.</p>
+  </div>
+
+  <div class="glass search-panel">
+    <label class="search-box">
+      <span aria-hidden="true">⌕</span>
+      <input id="siteSearch" type="search" placeholder="اكتب كلمة، تقنية، موضوعًا أو اسم مشروع..." autocomplete="off" autofocus />
+    </label>
+    <div class="search-filters" id="searchFilters" aria-label="تصفية النتائج">
+      <button type="button" data-type="all" aria-pressed="true">الكل</button>
+      <button type="button" data-type="article" aria-pressed="false">المقالات</button>
+      <button type="button" data-type="project" aria-pressed="false">المشاريع</button>
+      <button type="button" data-type="resource" aria-pressed="false">المصادر</button>
+    </div>
+  </div>
+
+  <div class="results-meta"><strong id="resultCount"></strong><span class="muted" id="searchHint">ابدأ الكتابة أو اختر قسمًا.</span></div>
+  <div id="searchResults" class="search-results">
+    {articles.map(post => <a class="glass search-result" href={articleUrl(post.id)} data-type="article" data-search={`${post.data.title} ${post.data.description} ${post.data.category} ${post.data.tags.join(' ')}`.toLocaleLowerCase('ar')}>
+      <div class="result-top"><span class="result-kind">مقال</span><span class="muted">{post.data.category}</span></div>
+      <h2>{post.data.title}</h2><p class="muted">{post.data.description}</p>
+      <div class="result-tags">{post.data.tags.slice(0,4).map(tag => <span>{tag}</span>)}</div>
+    </a>)}
+    {projects.map(project => <a class="glass search-result" href={`/projects/${project.id}/`} data-type="project" data-search={`${project.data.title} ${project.data.description} ${project.data.stack.join(' ')}`.toLocaleLowerCase('ar')}>
+      <div class="result-top"><span class="result-kind">مشروع</span><span class="muted">{project.data.stack.join(' · ')}</span></div>
+      <h2>{project.data.title}</h2><p class="muted">{project.data.description}</p>
+    </a>)}
+    {resources.map(resource => <a class="glass search-result" href={resource.url} target="_blank" rel="noopener noreferrer" data-type="resource" data-search={`${resource.name} ${resource.desc} ${resource.tags}`.toLocaleLowerCase('ar')}>
+      <div class="result-top"><span class="result-kind">مصدر</span><span class="muted">رابط خارجي ↗</span></div>
+      <h2>{resource.name}</h2><p class="muted">{resource.desc}</p>
+    </a>)}
+  </div>
+  <div id="noResults" class="glass no-results" hidden><strong>لا توجد نتائج مطابقة.</strong><p class="muted">جرّب كلمة أقصر أو غيّر نوع المحتوى.</p></div>
+</section>
+</Base>
+
+<script>
+const input=document.querySelector<HTMLInputElement>('#siteSearch')!;
+const cards=[...document.querySelectorAll<HTMLElement>('.search-result')];
+const count=document.querySelector<HTMLElement>('#resultCount')!;
+const hint=document.querySelector<HTMLElement>('#searchHint')!;
+const empty=document.querySelector<HTMLElement>('#noResults')!;
+const buttons=[...document.querySelectorAll<HTMLButtonElement>('#searchFilters button')];
+let type='all';
+const normalize=(value:string)=>value.toLocaleLowerCase('ar').trim().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/\s+/g,' ');
+function render(){
+  const q=normalize(input.value);
+  let shown=0;
+  cards.forEach(card=>{
+    const haystack=normalize(card.dataset.search||'');
+    const words=q.split(' ').filter(Boolean);
+    const matchText=!words.length||words.every(word=>haystack.includes(word));
+    const matchType=type==='all'||card.dataset.type===type;
+    const visible=matchText&&matchType;
+    card.hidden=!visible;if(visible)shown++;
+  });
+  count.textContent=`${shown} نتيجة`;
+  hint.textContent=q?`نتائج البحث عن «${input.value.trim()}»`:'يمكنك البحث بالعربية أو الإنجليزية.';
+  empty.hidden=shown!==0;
+  const url=new URL(location.href);q?url.searchParams.set('q',input.value.trim()):url.searchParams.delete('q');type!=='all'?url.searchParams.set('type',type):url.searchParams.delete('type');history.replaceState({},'',url);
+}
+buttons.forEach(btn=>btn.addEventListener('click',()=>{type=btn.dataset.type||'all';buttons.forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));render()}));
+input.addEventListener('input',render);
+const params=new URLSearchParams(location.search);input.value=params.get('q')||'';const requested=params.get('type');const selected=buttons.find(b=>b.dataset.type===requested);if(selected){type=requested!;buttons.forEach(b=>b.setAttribute('aria-pressed',String(b===selected)))}render();
+</script>
+
+<style>
+.search-page{max-width:980px}.search-head{margin-bottom:1.2rem}.search-panel{padding:1rem;position:sticky;top:78px;z-index:8;backdrop-filter:blur(18px)}.search-box{display:flex;align-items:center;gap:.7rem;border:1px solid var(--line,#24344f);border-radius:14px;padding:.15rem .85rem;background:var(--surface,#0c1930)}.search-box span{font-size:1.55rem;opacity:.72}.search-box input{width:100%;min-width:0;padding:.9rem 0;border:0;outline:0;background:transparent;color:var(--text,#eef5ff);font:inherit;font-size:1rem}.search-filters{display:flex;gap:.55rem;flex-wrap:wrap;margin-top:.8rem}.search-filters button{border:1px solid var(--line,#24344f);background:transparent;color:var(--text,#eef5ff);border-radius:999px;padding:.48rem .85rem;cursor:pointer;font:inherit}.search-filters button[aria-pressed="true"]{background:var(--accent,#4ca6ff);border-color:var(--accent,#4ca6ff);color:#071225;font-weight:800}.results-meta{display:flex;justify-content:space-between;gap:1rem;align-items:center;margin:1.15rem 0 .7rem}.search-results{display:grid;gap:.85rem}.search-result{display:block;padding:1.05rem 1.15rem;text-decoration:none;color:inherit;transition:transform .18s ease,border-color .18s ease}.search-result:hover{transform:translateY(-2px);border-color:var(--accent,#4ca6ff)}.search-result[hidden]{display:none!important}.search-result h2{font-size:1.08rem;margin:.5rem 0 .35rem}.search-result p{margin:0;line-height:1.75}.result-top{display:flex;justify-content:space-between;gap:.8rem;align-items:center;font-size:.84rem}.result-kind{font-weight:800;color:var(--accent,#4ca6ff)}.result-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.7rem}.result-tags span{font-size:.75rem;padding:.2rem .5rem;border-radius:999px;border:1px solid var(--line,#24344f)}.no-results{text-align:center;padding:2rem;margin-top:1rem}.no-results p{margin-bottom:0}:global(html[data-theme="light"]) .search-box{background:#fff;border-color:#d8e1ed}:global(html[data-theme="light"]) .search-box input,:global(html[data-theme="light"]) .search-filters button{color:#172033}:global(html[data-theme="light"]) .search-filters button{border-color:#cfd9e6}:global(html[data-theme="light"]) .search-panel{background:rgba(255,255,255,.9)}@media(max-width:700px){.search-panel{top:64px}.results-meta{align-items:flex-start;flex-direction:column;gap:.2rem}.search-filters{display:grid;grid-template-columns:repeat(2,1fr)}.search-filters button{width:100%}.result-top{align-items:flex-start}.search-result{padding:.95rem}}
+</style>
