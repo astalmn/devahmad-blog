@@ -5,7 +5,7 @@ interface Props {title?:string;description?:string;image?:string;type?:string}
 const {title=site.name,description='مقالات ومشاريع في البرمجة والذكاء الاصطناعي والأنظمة الذكية.',image='/assets/cover.png',type='website'}=Astro.props;
 const canonical=new URL(Astro.url.pathname, Astro.site ?? 'https://devahmad-blog.pages.dev');
 const og=new URL(image,canonical);
-const nav=[{href:'/',text:labels.home},{href:'/blog/',text:labels.blog},{href:'/projects/',text:labels.projects},{href:'/about/',text:labels.about},{href:'/resources/',text:labels.resources},{href:'/contact/',text:labels.contact}];
+const nav=[{href:'/',text:labels.home},{href:'/blog/',text:labels.blog},{href:'/projects/',text:labels.projects},{href:'/about/',text:labels.about},{href:'/resources/',text:labels.resources},{href:'/contact/',text:labels.contact},{href:'/search/',text:'بحث'}];
 ---
 <!doctype html>
 <html lang="ar" dir="rtl">
