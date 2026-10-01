@@ -63,3 +63,46 @@ html[data-theme="light"] .comments-list .comment strong{color:#0b63b6!important}
 html[data-theme="light"] .comments-box input,html[data-theme="light"] .comments-box textarea{background:#fff!important;color:#172033!important;border-color:#c3d2e2!important}html[data-theme="light"] .comments-box input::placeholder,html[data-theme="light"] .comments-box textarea::placeholder{color:#718096!important}
 @media(max-width:900px){.header-actions{width:100%;align-items:flex-start;flex-direction:column;gap:10px}.theme-toggle{align-self:flex-start}}
 @media print{.theme-toggle{display:none!important}}
+
+/* DevAhmad V2.9.1 — Light Mode Contrast Fix */
+html[data-theme="light"] .article-page .article-layout > aside .toc-panel.glass{
+  background:#ffffff !important;
+  border-color:#c7d5e5 !important;
+  color:#172033 !important;
+  box-shadow:0 12px 30px rgba(15,23,42,.10) !important;
+}
+html[data-theme="light"] .article-page .toc-toggle{
+  color:#172033 !important;
+}
+html[data-theme="light"] .article-page .toc-toggle strong{
+  color:#172033 !important;
+}
+html[data-theme="light"] .article-page .article-layout .toc a{
+  color:#52657b !important;
+}
+html[data-theme="light"] .article-page .article-layout .toc a:hover,
+html[data-theme="light"] .article-page .article-layout .toc a:focus-visible{
+  color:#075f91 !important;
+  background:#edf6fc !important;
+}
+html[data-theme="light"] .article-page .article-layout .toc a.active{
+  color:#075f91 !important;
+  background:#e7f3fb !important;
+  box-shadow:inset -3px 0 0 #0780ad !important;
+  font-weight:700;
+}
+html[data-theme="light"] .article-page .article-layout .prose .text-highlight{
+  color:#6b4b00 !important;
+  background:#fff1a8 !important;
+  border-color:#dfbd42 !important;
+  text-shadow:none !important;
+}
+html[data-theme="light"] .article-page .article-layout .prose mark{
+  color:#6b4b00 !important;
+  background:#fff1a8 !important;
+  border-color:#dfbd42 !important;
+  text-shadow:none !important;
+}
+html[data-theme="light"] .article-page .article-layout .prose .text-warning{
+  color:#7a4700 !important;
+}
