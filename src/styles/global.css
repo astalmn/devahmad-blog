@@ -6,3 +6,60 @@
 .article-videos{margin-block:36px}.article-video{margin-block:26px}.article-video h3{margin-bottom:12px}
 .video-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#07142b;border:1px solid #254c78}
 .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
+/* DevAhmad V2.9 — full-site Dark / Light theme system */
+:root{
+  --site-bg:#071225;--site-bg-glow:#102b56;--surface:#0b1c37;--surface-2:#102848;
+  --text:#eaf2ff;--muted:#a9bed9;--heading:#d8edff;--line:#29466a;
+  --field:#0d203a;--accent:#65dbff;--accent-strong:#1469cb;--code:#0a192c;
+  --header:rgba(8,22,43,.92);--shadow:rgba(0,0,0,.28)
+}
+html[data-theme="light"]{
+  --site-bg:#f4f7fb;--site-bg-glow:#dbeafe;--surface:#ffffff;--surface-2:#edf4fc;
+  --text:#172033;--muted:#5b6b80;--heading:#10213d;--line:#cbd8e7;
+  --field:#ffffff;--accent:#006fa8;--accent-strong:#0b63b6;--code:#f1f5f9;
+  --header:rgba(255,255,255,.94);--shadow:rgba(15,23,42,.10)
+}
+html,body{color:var(--text);background-color:var(--site-bg)}
+body{background:radial-gradient(ellipse at 80% 0%,var(--site-bg-glow) 0%,transparent 38%),var(--site-bg);transition:background-color .2s ease,color .2s ease}
+.site-header{background:var(--header);border-color:var(--line);backdrop-filter:blur(14px);position:relative;z-index:100}
+.site-footer{border-color:var(--line)}
+.muted{color:var(--muted)}.section-title,.card h2,.card h3,.prose h2,.prose h3{color:var(--heading)}
+.glass{background:color-mix(in srgb,var(--surface) 88%,transparent);border-color:var(--line);box-shadow:0 12px 34px var(--shadow)}
+.tag{color:var(--accent);border-color:var(--line)}
+.btn.secondary{background:var(--surface-2);color:var(--text);border-color:var(--line)}
+.controls input,.controls select{background:var(--field);border-color:var(--line);color:var(--text)}
+.pagination button{border-color:var(--line);background:var(--surface-2);color:var(--text)}
+.prose a,.toc a,.eyebrow{color:var(--accent)}
+.prose pre{background:var(--code);border-color:var(--line);color:var(--text)}
+.prose code:not(pre code){background:var(--surface-2);color:var(--text)}
+.prose blockquote{color:var(--muted);border-color:var(--accent)}
+.prose th,.prose td{border-color:var(--line)}
+.empty{border-color:var(--line)}
+.header-actions{display:flex;align-items:center;gap:18px;min-width:0}
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);color:var(--text);font-weight:800;box-shadow:0 6px 18px var(--shadow);transition:transform .18s ease,background .18s ease,border-color .18s ease}
+.theme-toggle:hover{transform:translateY(-1px);border-color:var(--accent)}.theme-icon{line-height:1}.theme-label{font-size:.86rem}
+html[data-theme="light"] .hero{background:#dfe9f5;border-color:#b8cce2}
+html[data-theme="light"] .hero:after{background:linear-gradient(0deg,rgba(244,247,251,.96) 0%,rgba(244,247,251,.60) 62%,rgba(244,247,251,.18))}
+html[data-theme="light"] .hero h1{color:#10213d}html[data-theme="light"] .hero p{color:#334155}
+html[data-theme="light"] .main-nav a[aria-current=page]{color:#006fa8;border-color:#006fa8}
+html[data-theme="light"] a:hover{color:#006fa8}
+html[data-theme="light"] ::selection{background:#0b63b6;color:#fff}
+html[data-theme="light"] .skip{background:#10213d;color:#fff}
+/* Scoped article and comments components: global theme overrides */
+html[data-theme="light"] .article-page{--article-text:#172033;--article-muted:#5b6b80;--article-line:#ccd8e6;--article-panel:#fff;--accent:#0b63b6;--cyan:#007ea8;--success:#16803b;--warning:#a15c00;--danger:#c02b45}
+html[data-theme="light"] .article-title,html[data-theme="light"] .article-layout .prose h2,html[data-theme="light"] .article-layout .prose h3,html[data-theme="light"] .article-layout .prose strong,html[data-theme="light"] .article-layout .prose .callout strong:first-child{color:#172033}
+html[data-theme="light"] .article-layout .prose a,html[data-theme="light"] .article-nav-label,html[data-theme="light"] .article-layout .prose .text-accent{color:#006fa8}
+html[data-theme="light"] .article-layout .prose .text-success{color:#16803b}html[data-theme="light"] .article-layout .prose .text-warning{color:#8a5200}html[data-theme="light"] .article-layout .prose .text-danger{color:#b4233d}
+html[data-theme="light"] .article-layout .prose code:not(pre code){background:#e8f0f8;color:#17324d}
+html[data-theme="light"] .article-layout .prose pre{background:#f5f8fc;color:#172033;border-color:#cbd8e7}
+html[data-theme="light"] .article-layout .prose .callout-info{background:#eef6ff}html[data-theme="light"] .article-layout .prose .callout-tip{background:#eefbf2}html[data-theme="light"] .article-layout .prose .callout-warning{background:#fff8e8}html[data-theme="light"] .article-layout .prose .callout-important{background:#fff0f3}
+html[data-theme="light"] .article-layout .prose mark{color:#5b4200;background:#fff0a8;border-color:#e7c85b}
+html[data-theme="light"] .article-nav-card{background:#fff;color:#172033;border-color:#cbd8e7}html[data-theme="light"] .article-nav-card:hover{background:#f2f7fc;border-color:#7aa8d4}
+html[data-theme="light"] .back-to-top{background:rgba(255,255,255,.94);color:#172033;border-color:#bfd0e2;box-shadow:0 10px 30px rgba(15,23,42,.12)}
+html[data-theme="light"] .comments-box{background:rgba(255,255,255,.86)!important;border-color:#c5d4e4!important}
+html[data-theme="light"] .comments-list .comment{background:linear-gradient(145deg,#fff,#f2f6fb)!important;border-color:#cbd8e7!important;box-shadow:0 8px 24px rgba(15,23,42,.08)!important}
+html[data-theme="light"] .comments-list .comment strong{color:#0b63b6!important}html[data-theme="light"] .comments-list .comment p{color:#26364b!important}html[data-theme="light"] .comments-list .comment small{color:#8a5a00!important;border-color:#d8e2ed!important}
+html[data-theme="light"] .comments-box input,html[data-theme="light"] .comments-box textarea{background:#fff!important;color:#172033!important;border-color:#c3d2e2!important}html[data-theme="light"] .comments-box input::placeholder,html[data-theme="light"] .comments-box textarea::placeholder{color:#718096!important}
+@media(max-width:900px){.header-actions{width:100%;align-items:flex-start;flex-direction:column;gap:10px}.theme-toggle{align-self:flex-start}}
+@media print{.theme-toggle{display:none!important}}
