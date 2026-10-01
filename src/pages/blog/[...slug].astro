@@ -26,10 +26,16 @@ function youtubeId(value: string): string | null {
 }
 const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)})).filter(video => video.id !== null);
 ---
-<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><article class="wrap section article-page"><a class="muted article-back" href="/blog/">→ العودة إلى المدونة</a><header class="article-header"><p><span class="tag">{post.data.category}</span></p><h1 class="article-title">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header><div class="article-layout"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass" style="padding:18px"><strong>محتويات المقال</strong><nav class="toc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{related.length>0&&<section class="section"><h2 class="section-title">مقالات ذات صلة</h2><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /></article></Base>
+<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><div class="reading-progress" id="readingProgress" aria-hidden="true"><span></span></div><article class="wrap section article-page"><a class="muted article-back" href="/blog/">→ العودة إلى المدونة</a><header class="article-header"><p><span class="tag">{post.data.category}</span></p><h1 class="article-title">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header><div class="article-layout"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass toc-panel" style="padding:18px"><button class="toc-toggle" id="tocToggle" type="button" aria-expanded="true" aria-controls="articleToc"><strong>محتويات المقال</strong><span aria-hidden="true">⌄</span></button><nav class="toc" id="articleToc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{related.length>0&&<section class="section"><h2 class="section-title">مقالات ذات صلة</h2><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /></article></Base>
 
 <style>
 /* DevAhmad V2.3 — refined professional article reading experience */
+/* DevAhmad V2.4 — reading navigation and mobile TOC */
+.reading-progress{position:fixed;top:0;inset-inline:0;height:3px;z-index:1000;pointer-events:none;background:transparent}
+.reading-progress span{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:right center;background:linear-gradient(90deg,#60a5fa,#67e8f9);will-change:transform}
+.toc-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:0;border:0;background:transparent;color:inherit;font:inherit;text-align:right;cursor:default}
+.toc-toggle span{display:none;font-size:1.15rem;transition:transform .18s ease}
+.article-layout :global(.toc a.active){color:#f4f9ff;background:rgba(96,165,250,.11);box-shadow:inset -2px 0 0 var(--accent)}
 .article-page{
   --article-text:#d9e4f2;
   --article-muted:#91a4bd;
@@ -311,12 +317,61 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
     min-width:155px;
     padding:.7rem .75rem;
   }
+  .toc-panel{padding:14px !important}
+  .toc-toggle{cursor:pointer;min-height:28px}
+  .toc-toggle span{display:inline-block}
+  .toc-panel.is-collapsed .toc-toggle span{transform:rotate(90deg)}
+  .toc-panel.is-collapsed .toc{display:none}
+  .toc-panel .toc{margin-top:.65rem}
   .controls{gap:.55rem;flex-wrap:wrap}
   .controls .btn{min-height:42px}
 }
 </style>
 
 <script>
+const progressBar=document.querySelector('#readingProgress span');
+const updateReadingProgress=()=>{
+  const article=document.querySelector('.article-page');
+  if(!article||!progressBar) return;
+  const rect=article.getBoundingClientRect();
+  const start=window.scrollY+rect.top;
+  const max=Math.max(1,article.scrollHeight-window.innerHeight);
+  const value=Math.min(1,Math.max(0,(window.scrollY-start)/max));
+  progressBar.style.transform=`scaleX(${value})`;
+};
+updateReadingProgress();
+addEventListener('scroll',updateReadingProgress,{passive:true});
+addEventListener('resize',updateReadingProgress,{passive:true});
+
+const tocPanel=document.querySelector('.toc-panel');
+const tocToggle=document.querySelector('#tocToggle');
+const setTocState=(collapsed)=>{
+  if(!tocPanel||!tocToggle) return;
+  tocPanel.classList.toggle('is-collapsed',collapsed);
+  tocToggle.setAttribute('aria-expanded',String(!collapsed));
+};
+if(matchMedia('(max-width: 900px)').matches) setTocState(true);
+tocToggle?.addEventListener('click',()=>{
+  if(!matchMedia('(max-width: 900px)').matches) return;
+  setTocState(!tocPanel?.classList.contains('is-collapsed'));
+});
+
+const tocLinks=[...document.querySelectorAll('.toc a')];
+const headingMap=new Map(tocLinks.map(link=>[decodeURIComponent(link.getAttribute('href')?.slice(1)||''),link]));
+const observed=[...document.querySelectorAll('.prose h2[id], .prose h3[id]')];
+if('IntersectionObserver' in window && observed.length){
+  const visible=new Set();
+  const markActive=()=>{
+    const current=observed.find(h=>visible.has(h)) || observed.slice().reverse().find(h=>h.getBoundingClientRect().top<150);
+    tocLinks.forEach(link=>link.classList.toggle('active',Boolean(current&&link===headingMap.get(current.id))));
+  };
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>entry.isIntersecting?visible.add(entry.target):visible.delete(entry.target));
+    markActive();
+  },{rootMargin:'-90px 0px -68% 0px',threshold:[0,1]});
+  observed.forEach(h=>observer.observe(h));
+}
+
 document.querySelectorAll('.prose table').forEach((table)=>{
   if(table.parentElement?.classList.contains('table-scroll')) return;
   const wrap=document.createElement('div');
