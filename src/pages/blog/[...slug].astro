@@ -379,44 +379,77 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
 .action-status{min-height:1.3em;font-size:.88rem;color:#86efac;opacity:0;transition:opacity .18s ease}
 .action-status.is-visible{opacity:1}
 @media print{
-  @page{size:A4 portrait;margin:12mm 13mm 14mm}
-  html,body{background:#fff!important;color:#111!important;font-size:12pt!important;width:auto!important;min-width:0!important}
-  body{margin:0!important;padding:0!important}
+  @page{size:A4 portrait;margin:12mm 13mm 14mm 13mm}
 
-  /* V2.8.2: print the article as a standalone document, not as a miniature website. */
-  body>header,body>footer,.site-header,.site-footer,.skip,.reading-progress,.article-back,.controls,.article-actions,.action-status,.article-layout>aside,.article-pagination,.related-section,.guest-comments,.back-to-top,.article-videos{display:none!important}
+  /* V2.8.3: escape the site layout completely in print mode. Base.astro lives
+     outside this component's Astro scope, so global selectors are required. */
+  :global(html),:global(body){
+    width:100%!important;max-width:none!important;min-width:0!important;
+    margin:0!important;padding:0!important;background:#fff!important;color:#111!important;
+    direction:rtl!important;overflow:visible!important;
+  }
+  :global(.site-header),:global(.site-footer),:global(.skip){display:none!important}
+  :global(#main){
+    display:block!important;width:100%!important;max-width:none!important;min-width:0!important;
+    margin:0!important;padding:0!important;overflow:visible!important;transform:none!important;
+  }
 
-  #main,.wrap,.section,.article-page,.article-header,.article-layout,.article-layout>.prose{display:block!important;box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important;padding-left:0!important;padding-right:0!important;transform:none!important}
-  .article-page{padding-top:0!important;padding-bottom:0!important}
-  .article-layout{margin-top:7mm!important}
-  .article-layout>.prose{overflow:visible!important}
+  .reading-progress,.article-back,.controls,.article-actions,.action-status,
+  .article-layout>aside,.article-pagination,.related-section,.guest-comments,
+  .back-to-top,.article-videos{display:none!important}
 
-  .article-header{margin:0 0 7mm!important;padding:0 0 5mm!important;border-bottom:1px solid #cbd5e1!important;text-align:right!important}
+  .article-page{
+    display:block!important;position:static!important;float:none!important;
+    width:100%!important;max-width:none!important;min-width:0!important;
+    margin:0!important;padding:0!important;inset:auto!important;transform:none!important;
+    direction:rtl!important;text-align:right!important;overflow:visible!important;
+  }
+  .article-header{
+    display:block!important;position:static!important;float:none!important;
+    width:100%!important;max-width:none!important;min-width:0!important;
+    margin:0 0 7mm!important;padding:0 0 5mm!important;transform:none!important;
+    border-bottom:1px solid #cbd5e1!important;text-align:right!important;direction:rtl!important;
+  }
+  .article-layout{
+    display:block!important;position:static!important;float:none!important;
+    grid-template-columns:none!important;grid-template-areas:none!important;gap:0!important;
+    justify-content:normal!important;align-items:normal!important;
+    width:100%!important;max-width:none!important;min-width:0!important;
+    margin:7mm 0 0!important;padding:0!important;transform:none!important;
+    direction:rtl!important;overflow:visible!important;
+  }
+  .article-layout>.prose{
+    display:block!important;position:static!important;float:none!important;
+    width:100%!important;max-width:none!important;min-width:0!important;
+    margin:0!important;padding:0!important;inset:auto!important;transform:none!important;
+    overflow:visible!important;direction:rtl!important;text-align:right!important;
+  }
+
   .article-header p:first-child{margin-top:0!important}
   .article-header .tag{display:inline-block!important;border:1px solid #94a3b8!important;background:transparent!important;color:#334155!important;padding:1.2mm 2.5mm!important;border-radius:999px!important;font-size:9.5pt!important}
-  .article-title,.article-header h1{color:#111!important;font-size:27pt!important;line-height:1.28!important;margin:3.5mm 0 3mm!important;letter-spacing:0!important}
-  .article-header .muted{color:#475569!important;font-size:11pt!important;line-height:1.7!important;margin:2mm 0!important}
+  .article-title,.article-header h1{color:#111!important;font-size:27pt!important;line-height:1.28!important;margin:3.5mm 0 3mm!important;letter-spacing:0!important;text-align:right!important}
+  .article-header .muted{color:#475569!important;font-size:11pt!important;line-height:1.7!important;margin:2mm 0!important;text-align:right!important}
 
-  .article-layout :global(.prose){direction:rtl!important;text-align:right!important;color:#111!important;font-size:12pt!important;line-height:1.9!important;max-width:100%!important}
-  .article-layout :global(.prose h2){color:#111!important;font-size:19pt!important;line-height:1.4!important;margin:8mm 0 3.5mm!important;padding:0!important;break-after:avoid-page}
+  .article-layout :global(.prose){direction:rtl!important;text-align:right!important;color:#111!important;font-size:12pt!important;line-height:1.9!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+  .article-layout :global(.prose h2){color:#111!important;font-size:19pt!important;line-height:1.4!important;margin:8mm 0 3.5mm!important;padding:0!important;break-after:avoid-page;text-align:right!important}
   .article-layout :global(.prose h2::after){display:none!important}
-  .article-layout :global(.prose h3){color:#111!important;font-size:15.5pt!important;line-height:1.45!important;margin:6mm 0 3mm!important;break-after:avoid-page}
-  .article-layout :global(.prose p){margin:0 0 4mm!important}
-  .article-layout :global(.prose ul),.article-layout :global(.prose ol){margin:3mm 0 5mm!important;padding-right:7mm!important}
-  .article-layout :global(.prose li){margin:1.5mm 0!important}
+  .article-layout :global(.prose h3){color:#111!important;font-size:15.5pt!important;line-height:1.45!important;margin:6mm 0 3mm!important;break-after:avoid-page;text-align:right!important}
+  .article-layout :global(.prose p){margin:0 0 4mm!important;text-align:right!important}
+  .article-layout :global(.prose ul),.article-layout :global(.prose ol){margin:3mm 0 5mm!important;padding-right:7mm!important;padding-left:0!important}
+  .article-layout :global(.prose li){margin:1.5mm 0!important;text-align:right!important}
   .article-layout :global(.prose p),.article-layout :global(.prose li){orphans:3;widows:3}
   .article-layout :global(.prose a){color:#111!important;text-decoration:underline;text-underline-offset:2px}
   .article-layout :global(.prose img){display:block!important;max-width:100%!important;height:auto!important;margin:5mm auto!important;break-inside:avoid-page}
 
-  .article-layout :global(.prose pre),.article-layout :global(.prose blockquote),.article-layout :global(.prose .callout){break-inside:avoid-page;max-width:100%!important;box-sizing:border-box!important}
+  .article-layout :global(.prose pre),.article-layout :global(.prose blockquote),.article-layout :global(.prose .callout){break-inside:avoid-page;width:100%!important;max-width:none!important;box-sizing:border-box!important}
   .article-layout :global(.prose pre){white-space:pre-wrap!important;overflow-wrap:anywhere!important;font-size:9.5pt!important;line-height:1.55!important;border:1px solid #cbd5e1!important;background:#f8fafc!important;color:#111!important;padding:4mm!important}
-  .article-layout :global(.prose blockquote),.article-layout :global(.prose .callout){background:#f8fafc!important;color:#111!important;border:1px solid #cbd5e1!important;border-right:3px solid #64748b!important;box-shadow:none!important;padding:4mm 5mm!important;margin:5mm 0!important}
+  .article-layout :global(.prose blockquote),.article-layout :global(.prose .callout){background:#f8fafc!important;color:#111!important;border:1px solid #cbd5e1!important;border-right:3px solid #64748b!important;box-shadow:none!important;padding:4mm 5mm!important;margin:5mm 0!important;text-align:right!important}
 
-  .article-layout :global(.table-scroll){display:block!important;width:100%!important;max-width:100%!important;overflow:visible!important;border:0!important;margin:5mm 0 6mm!important}
-  .article-layout :global(.prose table){direction:rtl!important;table-layout:fixed!important;min-width:0!important;width:100%!important;max-width:100%!important;border-collapse:collapse!important;font-size:9.3pt!important;line-height:1.45!important;break-inside:auto}
+  .article-layout :global(.table-scroll){display:block!important;width:100%!important;max-width:none!important;overflow:visible!important;border:0!important;margin:5mm 0 6mm!important;padding:0!important;transform:none!important}
+  .article-layout :global(.prose table){direction:rtl!important;table-layout:fixed!important;min-width:0!important;width:100%!important;max-width:none!important;margin:0!important;border-collapse:collapse!important;font-size:9.3pt!important;line-height:1.45!important;break-inside:auto}
   .article-layout :global(.prose thead){display:table-header-group}
   .article-layout :global(.prose tr){break-inside:avoid-page}
-  .article-layout :global(.prose th),.article-layout :global(.prose td){border:1px solid #94a3b8!important;padding:2.3mm 2mm!important;color:#111!important;background:#fff!important;overflow-wrap:anywhere!important;word-break:normal!important;vertical-align:top!important}
+  .article-layout :global(.prose th),.article-layout :global(.prose td){border:1px solid #94a3b8!important;padding:2.3mm 2mm!important;color:#111!important;background:#fff!important;overflow-wrap:anywhere!important;word-break:normal!important;vertical-align:top!important;text-align:right!important}
   .article-layout :global(.prose th){font-weight:700!important;background:#f1f5f9!important}
 }
 
