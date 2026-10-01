@@ -56,7 +56,7 @@ function youtubeId(value: string): string | null {
 }
 const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)})).filter(video => video.id !== null);
 ---
-<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><Fragment slot="head"><meta property="article:published_time" content={post.data.date.toISOString()}/><meta property="article:section" content={post.data.category}/>{post.data.tags.map(tag=><meta property="article:tag" content={tag}/>)}<script type="application/ld+json" set:html={JSON.stringify(articleSchema)}></script></Fragment><div class="reading-progress" id="readingProgress" aria-hidden="true"><span></span></div><article class="wrap section article-page"><a class="muted article-back" href="/blog/">→ العودة إلى المدونة</a><header class="article-header"><p><span class="tag">{post.data.category}</span></p><h1 class="article-title">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header><div class="article-layout"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass toc-panel" style="padding:18px"><button class="toc-toggle" id="tocToggle" type="button" aria-expanded="true" aria-controls="articleToc"><strong>محتويات المقال</strong><span aria-hidden="true">⌄</span></button><nav class="toc" id="articleToc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{(previousPost||nextPost)&&<nav class="article-pagination" aria-label="التنقل بين المقالات">{previousPost?<a class="article-nav-card previous" href={`/blog/${previousPost.id}/`}><span class="article-nav-label">← المقال السابق</span><strong>{previousPost.data.title}</strong></a>:<span></span>}{nextPost?<a class="article-nav-card next" href={`/blog/${nextPost.id}/`}><span class="article-nav-label">المقال التالي →</span><strong>{nextPost.data.title}</strong></a>:<span></span>}</nav>}{related.length>0&&<section class="section related-section"><h2 class="section-title">مقالات ذات صلة</h2><p class="muted related-intro">مقالات مختارة حسب التصنيف والوسوم المشتركة.</p><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /><button class="back-to-top" id="backToTop" type="button" aria-label="العودة إلى أعلى المقال" title="العودة للأعلى">↑</button></article></Base>
+<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><Fragment slot="head"><meta property="article:published_time" content={post.data.date.toISOString()}/><meta property="article:section" content={post.data.category}/>{post.data.tags.map(tag=><meta property="article:tag" content={tag}/>)}<script type="application/ld+json" set:html={JSON.stringify(articleSchema)}></script></Fragment><div class="reading-progress" id="readingProgress" aria-hidden="true"><span></span></div><article class="wrap section article-page"><a class="muted article-back" href="/blog/">→ العودة إلى المدونة</a><header class="article-header"><p><span class="tag">{post.data.category}</span></p><h1 class="article-title">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls article-actions" aria-label="إجراءات المقال"><button class="btn secondary" id="share" type="button">مشاركة</button><button class="btn secondary" id="copylink" type="button">نسخ الرابط</button><button class="btn secondary" id="printArticle" type="button">طباعة / PDF</button><span class="action-status" id="actionStatus" role="status" aria-live="polite"></span></div></header><div class="article-layout"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass toc-panel" style="padding:18px"><button class="toc-toggle" id="tocToggle" type="button" aria-expanded="true" aria-controls="articleToc"><strong>محتويات المقال</strong><span aria-hidden="true">⌄</span></button><nav class="toc" id="articleToc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{(previousPost||nextPost)&&<nav class="article-pagination" aria-label="التنقل بين المقالات">{previousPost?<a class="article-nav-card previous" href={`/blog/${previousPost.id}/`}><span class="article-nav-label">← المقال السابق</span><strong>{previousPost.data.title}</strong></a>:<span></span>}{nextPost?<a class="article-nav-card next" href={`/blog/${nextPost.id}/`}><span class="article-nav-label">المقال التالي →</span><strong>{nextPost.data.title}</strong></a>:<span></span>}</nav>}{related.length>0&&<section class="section related-section"><h2 class="section-title">مقالات ذات صلة</h2><p class="muted related-intro">مقالات مختارة حسب التصنيف والوسوم المشتركة.</p><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /><button class="back-to-top" id="backToTop" type="button" aria-label="العودة إلى أعلى المقال" title="العودة للأعلى">↑</button></article></Base>
 
 <style>
 /* DevAhmad V2.3 — refined professional article reading experience */
@@ -374,6 +374,21 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
 .related-intro{margin-top:-.55rem;margin-bottom:1.15rem}
 @media(max-width:640px){.article-pagination{grid-template-columns:1fr;gap:.75rem;margin-top:2rem}.article-pagination>span:empty{display:none}.article-nav-card{padding:.9rem 1rem}.article-nav-card.next{text-align:right;align-items:flex-start}.related-section{padding-top:1.5rem}}
 
+/* DevAhmad V2.8 — article actions */
+.article-actions{align-items:center}
+.action-status{min-height:1.3em;font-size:.88rem;color:#86efac;opacity:0;transition:opacity .18s ease}
+.action-status.is-visible{opacity:1}
+@media print{
+  .site-header,.site-footer,.reading-progress,.article-back,.controls,.article-layout>aside,.article-pagination,.related-section,.guest-comments,.back-to-top{display:none!important}
+  body{background:#fff!important;color:#111!important}
+  .article-page,.article-layout,.article-layout>.prose{display:block!important;max-width:none!important;width:100%!important}
+  .article-layout :global(.prose),.article-title,.article-header .muted{color:#111!important}
+  .article-layout :global(.prose a){color:#111!important;text-decoration:underline}
+  .article-layout :global(.prose pre),.article-layout :global(.prose .callout){break-inside:avoid}
+  .article-layout :global(.table-scroll){overflow:visible!important;border-color:#bbb!important}
+  .article-layout :global(.prose table){min-width:0!important;width:100%!important}
+}
+
 </style>
 
 <script>
@@ -441,6 +456,37 @@ document.querySelectorAll('.prose table').forEach((table)=>{
   table.parentNode?.insertBefore(wrap,table);
   wrap.appendChild(table);
 });
-document.querySelector('#copylink')?.addEventListener('click',async()=>{await navigator.clipboard.writeText(location.href);const b=document.querySelector('#copylink');if(b)b.textContent='تم نسخ الرابط'});
-document.querySelector('#share')?.addEventListener('click',async()=>{if(navigator.share){try{await navigator.share({title:document.title,url:location.href})}catch{}}else{await navigator.clipboard.writeText(location.href)}});
+const actionStatus=document.querySelector('#actionStatus');
+let statusTimer;
+const showActionStatus=(message)=>{
+  if(!actionStatus) return;
+  actionStatus.textContent=message;
+  actionStatus.classList.add('is-visible');
+  clearTimeout(statusTimer);
+  statusTimer=setTimeout(()=>actionStatus.classList.remove('is-visible'),2200);
+};
+const copyArticleLink=async()=>{
+  try{
+    await navigator.clipboard.writeText(location.href);
+    showActionStatus('تم نسخ الرابط');
+    return true;
+  }catch{
+    const input=document.createElement('textarea');
+    input.value=location.href;
+    input.setAttribute('readonly','');
+    input.style.position='fixed';input.style.opacity='0';
+    document.body.appendChild(input);input.select();
+    const ok=document.execCommand('copy');input.remove();
+    showActionStatus(ok?'تم نسخ الرابط':'تعذر نسخ الرابط');
+    return ok;
+  }
+};
+document.querySelector('#copylink')?.addEventListener('click',copyArticleLink);
+document.querySelector('#share')?.addEventListener('click',async()=>{
+  if(navigator.share){
+    try{await navigator.share({title:document.title,text:document.querySelector('.article-header .muted')?.textContent||'',url:location.href});showActionStatus('تمت المشاركة');}
+    catch(error){if(error?.name!=='AbortError') await copyArticleLink();}
+  }else await copyArticleLink();
+});
+document.querySelector('#printArticle')?.addEventListener('click',()=>window.print());
 </script>
