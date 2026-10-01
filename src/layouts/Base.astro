@@ -5,7 +5,7 @@ interface Props {title?:string;description?:string;image?:string;type?:string}
 const {title=site.name,description='مقالات ومشاريع في البرمجة والذكاء الاصطناعي والأنظمة الذكية.',image='/assets/cover.png',type='website'}=Astro.props;
 const canonical=new URL(Astro.url.pathname, Astro.site ?? 'https://devahmad-blog.pages.dev');
 const og=new URL(image,canonical);
-const nav=[{href:'/',text:labels.home},{href:'/blog/',text:labels.blog},{href:'/projects/',text:labels.projects},{href:'/about/',text:labels.about},{href:'/resources/',text:labels.resources},{href:'/contact/',text:labels.contact},{href:'/search/',text:'بحث'}];
+const nav=[{href:'/',text:labels.home},{href:'/blog/',text:labels.blog},{href:'/projects/',text:labels.projects},{href:'/about/',text:labels.about},{href:'/resources/',text:labels.resources},{href:'/contact/',text:labels.contact}];
 ---
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -23,10 +23,46 @@ const nav=[{href:'/',text:labels.home},{href:'/blog/',text:labels.blog},{href:'/
 </head>
 <body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>
-<header class="site-header"><div class="wrap header-inner"><a class="brand" href="/" aria-label="DevAhmad الرئيسية"><span>Dev</span>Ahmad</a><div class="header-actions"><nav aria-label="القائمة الرئيسية" class="main-nav">{nav.map(item=><a href={item.href} aria-current={Astro.url.pathname===item.href?'page':undefined}>{item.text}</a>)}</nav><button class="theme-toggle" id="themeToggle" type="button" aria-label="تبديل المظهر" title="تبديل الوضع الفاتح والداكن"><span class="theme-icon" aria-hidden="true">☀️</span><span class="theme-label">فاتح</span></button></div></div></header>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="/" aria-label="DevAhmad الرئيسية"><span>Dev</span>Ahmad</a>
+    <div class="header-actions">
+      <nav aria-label="القائمة الرئيسية" class="main-nav">{nav.map(item=><a href={item.href} aria-current={Astro.url.pathname===item.href?'page':undefined}>{item.text}</a>)}</nav>
+      <form class="header-search" action="/search/" method="get" role="search">
+        <label class="sr-only" for="headerSearch">ابحث في DevAhmad</label>
+        <div class="header-search-box">
+          <input id="headerSearch" name="q" type="search" placeholder="ابحث في المقالات والمشاريع والمصادر..." autocomplete="off"/>
+          <button type="submit" aria-label="بحث">⌕</button>
+        </div>
+      </form>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="تبديل المظهر" title="تبديل الوضع الفاتح والداكن"><span class="theme-icon" aria-hidden="true">☀️</span><span class="theme-label">فاتح</span></button>
+    </div>
+  </div>
+</header>
 <main id="main"><slot/></main>
 <footer class="site-footer"><div class="wrap footer-inner"><div><a class="brand" href="/"><span>Dev</span>Ahmad</a><p class="muted">أفكار برمجية وأنظمة أذكى.</p></div><div class="footer-links"><a href="/contact/">تواصل</a><a href="/privacy/">الخصوصية</a><a href="/rss.xml">RSS</a><a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a></div><small class="muted">© {new Date().getFullYear()} DevAhmad</small></div></footer>
 <script is:inline>
 (()=>{const root=document.documentElement;const btn=document.getElementById('themeToggle');if(!btn)return;const icon=btn.querySelector('.theme-icon');const label=btn.querySelector('.theme-label');const meta=document.querySelector('meta[name="theme-color"]');function paint(){const light=root.dataset.theme==='light';if(icon)icon.textContent=light?'🌙':'☀️';if(label)label.textContent=light?'داكن':'فاتح';btn.setAttribute('aria-pressed',String(light));btn.setAttribute('title',light?'التبديل إلى الوضع الداكن':'التبديل إلى الوضع الفاتح');if(meta)meta.setAttribute('content',light?'#f4f7fb':'#071225')}paint();btn.addEventListener('click',()=>{const next=root.dataset.theme==='light'?'dark':'light';root.dataset.theme=next;root.style.colorScheme=next;localStorage.setItem('devahmad-theme',next);paint()})})();
 </script>
+
+
+<style>
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .header-search{width:min(100%,560px);margin:.55rem 0 .1rem}
+  .header-search-box{display:flex;align-items:center;width:100%;min-height:46px;border:1px solid var(--border,rgba(127,127,127,.28));border-radius:16px;background:var(--surface,#0d1b2e);overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  .header-search input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text,#eef6ff);font:inherit;padding:.72rem 1rem;text-align:right}
+  .header-search input::placeholder{color:var(--muted,#7f8ea3);opacity:.9}
+  .header-search button{width:48px;align-self:stretch;border:0;border-inline-start:1px solid var(--border,rgba(127,127,127,.28));background:transparent;color:var(--accent,#35c8e8);font-size:1.55rem;cursor:pointer}
+  .header-search-box:focus-within{border-color:var(--accent,#35c8e8);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent,#35c8e8) 16%,transparent)}
+  :global(html[data-theme="light"]) .header-search-box{background:#fff;border-color:#cbd7e5;box-shadow:0 7px 20px rgba(22,43,72,.07)}
+  :global(html[data-theme="light"]) .header-search input{color:#142033}
+  :global(html[data-theme="light"]) .header-search input::placeholder{color:#68778b}
+  @media(max-width:760px){
+    .header-inner{align-items:flex-start}
+    .header-actions{width:100%}
+    .header-search{width:100%;margin:.65rem 0 .2rem}
+    .header-search-box{min-height:48px;border-radius:15px}
+  }
+  @media print{.header-search{display:none!important}}
+</style>
 </body></html>
