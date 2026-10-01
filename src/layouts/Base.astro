@@ -14,7 +14,9 @@ const nav=[{href:'/',text:labels.home},{href:'/blog/',text:labels.blog},{href:'/
 <meta name="description" content={description}/><meta name="theme-color" content="#071225"/>
 <title>{title===site.name?site.name:`${title} | ${site.name}`}</title>
 <link rel="canonical" href={canonical}/><link rel="alternate" type="application/rss+xml" title="DevAhmad RSS" href="/rss.xml"/>
-<meta property="og:type" content={type}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:image" content={og}/>
+<meta property="og:type" content={type}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:image" content={og}/><meta property="og:site_name" content={site.name}/><meta property="og:locale" content="ar_AR"/>
+<meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={og}/>
+<slot name="head"/>
 </head>
 <body>
 <a class="skip" href="#main">انتقل إلى المحتوى</a>
