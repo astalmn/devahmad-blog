@@ -8,7 +8,21 @@ import type {CollectionEntry} from 'astro:content';
 export async function getStaticPaths(){return (await getCollection('blog',({data})=>data.lang==='ar'&&!data.draft)).map(post=>({params:{slug:post.id},props:{post}}));}
 const {post}=Astro.props as {post:CollectionEntry<'blog'>};
 const {Content,headings}=await render(post);
-const related=(await posts()).filter(p=>p.id!==post.id&&(p.data.category===post.data.category||p.data.tags.some(tag=>post.data.tags.includes(tag)))).slice(0,3);
+const allPosts=(await posts()).filter(p=>p.data.lang==='ar'&&!p.data.draft).sort((a,b)=>b.data.date.getTime()-a.data.date.getTime());
+const currentIndex=allPosts.findIndex(p=>p.id===post.id);
+// Newer article appears as "next" and older article as "previous" in the reading flow.
+const nextPost=currentIndex>0?allPosts[currentIndex-1]:null;
+const previousPost=currentIndex>=0&&currentIndex<allPosts.length-1?allPosts[currentIndex+1]:null;
+const related=allPosts
+  .filter(p=>p.id!==post.id)
+  .map(p=>({
+    post:p,
+    score:(p.data.category===post.data.category?3:0)+p.data.tags.filter(tag=>post.data.tags.includes(tag)).length
+  }))
+  .filter(item=>item.score>0)
+  .sort((a,b)=>b.score-a.score||b.post.data.date.getTime()-a.post.data.date.getTime())
+  .slice(0,3)
+  .map(item=>item.post);
 const minutes=Math.max(1,Math.ceil((post.body ?? '').split(/\s+/).length/220));
 // Extract only valid YouTube video IDs. Never embed arbitrary visitor-provided URLs.
 function youtubeId(value: string): string | null {
@@ -26,7 +40,7 @@ function youtubeId(value: string): string | null {
 }
 const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)})).filter(video => video.id !== null);
 ---
-<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><div class="reading-progress" id="readingProgress" aria-hidden="true"><span></span></div><article class="wrap section article-page"><a class="muted article-back" href="/blog/">→ العودة إلى المدونة</a><header class="article-header"><p><span class="tag">{post.data.category}</span></p><h1 class="article-title">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header><div class="article-layout"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass toc-panel" style="padding:18px"><button class="toc-toggle" id="tocToggle" type="button" aria-expanded="true" aria-controls="articleToc"><strong>محتويات المقال</strong><span aria-hidden="true">⌄</span></button><nav class="toc" id="articleToc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{related.length>0&&<section class="section"><h2 class="section-title">مقالات ذات صلة</h2><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /><button class="back-to-top" id="backToTop" type="button" aria-label="العودة إلى أعلى المقال" title="العودة للأعلى">↑</button></article></Base>
+<Base title={post.data.title} description={post.data.description} image={post.data.cover||'/assets/cover.png'} type="article"><div class="reading-progress" id="readingProgress" aria-hidden="true"><span></span></div><article class="wrap section article-page"><a class="muted article-back" href="/blog/">→ العودة إلى المدونة</a><header class="article-header"><p><span class="tag">{post.data.category}</span></p><h1 class="article-title">{post.data.title}</h1><p class="muted">{post.data.description}</p><p class="muted"><time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString('ar',{dateStyle:'long'})}</time> · {minutes} دقائق قراءة</p><div class="controls"><button class="btn secondary" id="share">مشاركة</button><button class="btn secondary" id="copylink">نسخ الرابط</button></div></header><div class="article-layout"><div class="prose"><Content/>{videos.length > 0 && <section class="article-videos" aria-label="فيديوهات المقال"><h2>فيديوهات المقال</h2>{videos.map(video => <div class="article-video"><h3>{video.title}</h3><div class="video-frame"><iframe src={`https://www.youtube-nocookie.com/embed/${video.id}`} title={video.title} loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div></div>)}</section>}</div><aside><div class="glass toc-panel" style="padding:18px"><button class="toc-toggle" id="tocToggle" type="button" aria-expanded="true" aria-controls="articleToc"><strong>محتويات المقال</strong><span aria-hidden="true">⌄</span></button><nav class="toc" id="articleToc" aria-label="محتويات المقال">{headings.filter(h=>h.depth<=3).map(h=><a href={`#${h.slug}`} style={`padding-inline-start:${Math.max(0,h.depth-2)*12}px`}>{h.text}</a>)}</nav></div></aside></div>{(previousPost||nextPost)&&<nav class="article-pagination" aria-label="التنقل بين المقالات">{previousPost?<a class="article-nav-card previous" href={`/blog/${previousPost.id}/`}><span class="article-nav-label">← المقال السابق</span><strong>{previousPost.data.title}</strong></a>:<span></span>}{nextPost?<a class="article-nav-card next" href={`/blog/${nextPost.id}/`}><span class="article-nav-label">المقال التالي →</span><strong>{nextPost.data.title}</strong></a>:<span></span>}</nav>}{related.length>0&&<section class="section related-section"><h2 class="section-title">مقالات ذات صلة</h2><p class="muted related-intro">مقالات مختارة حسب التصنيف والوسوم المشتركة.</p><div class="cards">{related.map(p=><ArticleCard post={p}/>)}</div></section>}<GuestComments pageId={post.id} title={post.data.title} /><button class="back-to-top" id="backToTop" type="button" aria-label="العودة إلى أعلى المقال" title="العودة للأعلى">↑</button></article></Base>
 
 <style>
 /* DevAhmad V2.3 — refined professional article reading experience */
@@ -331,6 +345,19 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
   .controls{gap:.55rem;flex-wrap:wrap}
   .controls .btn{min-height:42px}
 }
+
+/* DevAhmad V2.6 — article navigation & discovery */
+.article-pagination{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:2.6rem auto 1rem;max-width:1040px}
+.article-nav-card{min-width:0;display:flex;flex-direction:column;gap:.45rem;padding:1rem 1.1rem;border:1px solid var(--article-line);border-radius:14px;background:rgba(10,24,43,.66);color:#eef6ff;text-decoration:none;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.article-nav-card:hover,.article-nav-card:focus-visible{transform:translateY(-2px);border-color:rgba(125,211,252,.55);background:rgba(15,32,57,.86);outline:none}
+.article-nav-card.next{text-align:left;align-items:flex-end}
+.article-nav-card.previous{text-align:right;align-items:flex-start}
+.article-nav-label{color:#7dd3fc;font-size:.88rem;font-weight:700}
+.article-nav-card strong{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.55}
+.related-section{padding-top:2rem}
+.related-intro{margin-top:-.55rem;margin-bottom:1.15rem}
+@media(max-width:640px){.article-pagination{grid-template-columns:1fr;gap:.75rem;margin-top:2rem}.article-pagination>span:empty{display:none}.article-nav-card{padding:.9rem 1rem}.article-nav-card.next{text-align:right;align-items:flex-start}.related-section{padding-top:1.5rem}}
+
 </style>
 
 <script>
