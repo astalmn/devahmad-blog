@@ -91,6 +91,20 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
   line-height:2;
   text-align:right;
   overflow-wrap:break-word;
+  direction:rtl;
+}
+/* Keep Arabic paragraphs stable when Latin technical terms appear inline. */
+.article-layout :global(.prose p),
+.article-layout :global(.prose li),
+.article-layout :global(.prose blockquote),
+.article-layout :global(.prose .callout){
+  direction:rtl;
+  unicode-bidi:plaintext;
+}
+.article-layout :global(.prose bdi),
+.article-layout :global(.prose [dir="ltr"]){
+  direction:ltr;
+  unicode-bidi:isolate;
 }
 .article-layout :global(.prose p){margin:0 0 1.35rem}
 .article-layout :global(.prose h2){
@@ -264,13 +278,14 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
   }
   .article-layout :global(.prose p){margin-bottom:1.15rem}
   .article-layout :global(.prose h2){
-    margin:2.55rem 0 1rem;
-    font-size:1.72rem;
-    line-height:1.42;
+    margin:2.25rem 0 .9rem;
+    font-size:clamp(1.48rem,6.5vw,1.62rem);
+    line-height:1.4;
   }
   .article-layout :global(.prose h3){
-    margin:2rem 0 .85rem;
-    font-size:1.35rem;
+    margin:1.7rem 0 .75rem;
+    font-size:1.28rem;
+    line-height:1.48;
   }
   .article-layout :global(.prose ul),
   .article-layout :global(.prose ol){
@@ -278,8 +293,8 @@ const videos = post.data.videos.map(video => ({...video,id:youtubeId(video.url)}
     margin-bottom:1.35rem;
   }
   .article-layout :global(.prose .callout){
-    margin:1.35rem 0;
-    padding:.9rem .95rem;
+    margin:1.15rem 0 1.3rem;
+    padding:.88rem .95rem;
     border-radius:12px;
   }
   .article-layout :global(.prose table){
