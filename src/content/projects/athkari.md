@@ -3,7 +3,7 @@ title: "أذكاري — تطبيق الأذكار"
 description: "تطبيق عربي تفاعلي للأذكار اليومية، المسبحة الإلكترونية، المفضلة وتتبع التقدم، ويمكن تجربته مباشرة داخل إطار هاتف."
 stack: [HTML5, CSS3, JavaScript, LocalStorage]
 lang: ar
-demo: "/apps/athkari/"
+demo: "https://devahmad.pages.dev/apps/athkari/"
 ---
 
 ## نبذة عن المشروع
