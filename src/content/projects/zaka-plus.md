@@ -4,6 +4,7 @@ description: "مشروع ويب عربي/إنجليزي يجمع أدوات تع
 stack: [React, TypeScript, Vite, Supabase, Cloudflare Pages]
 lang: ar
 repository: "https://github.com/astalmn/zaka_plus"
+demo: "https://zaka-plus.devahmad.workers.dev/"
 ---
 
 ## نبذة عن المشروع
@@ -65,6 +66,6 @@ repository: "https://github.com/astalmn/zaka_plus"
 
 أعمل على تطوير المنصة تدريجيًا وإكمال الأدوات وربطها بالخدمات المطلوبة قبل اعتبارها إصدارًا نهائيًا.
 
-## الشيفرة المصدرية
+## تشغيل المشروع
 
-المستودع متاح على GitHub من زر **الشيفرة المصدرية** أسفل الصفحة.
+**ذكاء بلس** متاح للاستخدام مباشرة عبر المتصفح. استخدم زر **تجربة المشروع** أسفل الصفحة لفتح المنصة وتجربتها.
