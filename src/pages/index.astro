@@ -29,17 +29,53 @@ const projects = [
       />
 
       <div class="hero-content">
-        <span class="eyebrow">البرمجة · الذكاء الاصطناعي · الأنظمة الذكية</span>
-        <h1>أفكار برمجية،<br />وأنظمة أذكى.</h1>
+        <span class="eyebrow">DevAhmad · Programmer · Intelligent Systems Engineer</span>
+        <h1>أبني تطبيقات ويب<br />وأنظمة أذكى.</h1>
         <p>
-          أبني تطبيقات ويب ومنتجات ذكية تجمع بين البرمجة والذكاء الاصطناعي،
-          وأشارك هنا المشاريع والتجارب والمقالات التقنية.
+          أطور منتجات رقمية عملية تجمع بين تطوير الويب والذكاء الاصطناعي،
+          من الفكرة إلى تجربة قابلة للاستخدام والنشر.
         </p>
 
         <div class="controls">
           <a class="btn" href="/projects/">استكشف المشاريع</a>
           <a class="btn secondary" href="/blog/">اقرأ المدونة</a>
         </div>
+      </div>
+    </section>
+
+    <section class="section activity-section">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Latest Activity</span>
+          <h2 class="section-title">آخر ما أعمل عليه</h2>
+          <p class="muted">تحديثات مختصرة على المشاريع والتطوير الجاري في DevAhmad.</p>
+        </div>
+      </div>
+
+      <div class="activity-grid">
+        <article class="glass activity-card">
+          <span class="activity-dot"></span>
+          <div>
+            <strong>نور القرآن</strong>
+            <p>إضافة التطبيق إلى المعرض مع معاينة تفاعلية داخل إطار هاتف.</p>
+          </div>
+        </article>
+
+        <article class="glass activity-card">
+          <span class="activity-dot"></span>
+          <div>
+            <strong>أذكاري</strong>
+            <p>إتاحة نسخة قابلة للتجربة مباشرة مع المسبحة والمفضلة والتقدم اليومي.</p>
+          </div>
+        </article>
+
+        <article class="glass activity-card">
+          <span class="activity-dot activity-dot--active"></span>
+          <div>
+            <strong>ذكاء بلس</strong>
+            <p>تطوير تجربة محادثة موحدة وأدوات ذكاء اصطناعي ضمن واجهة واحدة.</p>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -139,6 +175,51 @@ const projects = [
 </Base>
 
 <style>
+  .activity-section{
+    margin-top:clamp(42px,7vw,78px);
+  }
+
+  .activity-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:16px;
+  }
+
+  .activity-card{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    padding:20px;
+  }
+
+  .activity-card strong{
+    display:block;
+    margin-bottom:6px;
+    font-size:1rem;
+  }
+
+  .activity-card p{
+    margin:0;
+    color:var(--muted,#9fb0c7);
+    line-height:1.75;
+    font-size:.9rem;
+  }
+
+  .activity-dot{
+    flex:0 0 auto;
+    width:10px;
+    height:10px;
+    margin-top:7px;
+    border-radius:50%;
+    background:#5da7d5;
+    box-shadow:0 0 0 5px rgba(93,167,213,.1);
+  }
+
+  .activity-dot--active{
+    background:#52d9a7;
+    box-shadow:0 0 0 5px rgba(82,217,167,.11),0 0 18px rgba(82,217,167,.28);
+  }
+
   .featured-projects{
     margin-top:clamp(42px,7vw,78px);
   }
@@ -209,6 +290,7 @@ const projects = [
   }
 
   @media(max-width:980px){
+    .activity-grid{grid-template-columns:1fr}
     .featured-grid{
       grid-template-columns:repeat(2,minmax(0,1fr));
     }
