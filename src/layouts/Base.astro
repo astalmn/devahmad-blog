@@ -114,7 +114,17 @@ const personSchema = {
           <span>Dev</span>Ahmad
         </a>
 
-        <nav aria-label="القائمة الرئيسية" class="main-nav">
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-label="فتح القائمة"
+          aria-expanded="false"
+          aria-controls="main-navigation"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <nav id="main-navigation" aria-label="القائمة الرئيسية" class="main-nav">
           {nav.map(item => (
             <a
               href={item.href}
@@ -148,5 +158,229 @@ const personSchema = {
         <small class="muted">© {new Date().getFullYear()} DevAhmad</small>
       </div>
     </footer>
+
+    <script is:inline>
+      (() => {
+        const button = document.querySelector('.menu-toggle');
+        const nav = document.querySelector('#main-navigation');
+
+        if (!button || !nav) return;
+
+        const closeMenu = () => {
+          nav.classList.remove('is-open');
+          button.setAttribute('aria-expanded', 'false');
+          button.setAttribute('aria-label', 'فتح القائمة');
+          document.body.classList.remove('nav-open');
+        };
+
+        button.addEventListener('click', () => {
+          const open = !nav.classList.contains('is-open');
+          nav.classList.toggle('is-open', open);
+          button.setAttribute('aria-expanded', String(open));
+          button.setAttribute('aria-label', open ? 'إغلاق القائمة' : 'فتح القائمة');
+          document.body.classList.toggle('nav-open', open);
+        });
+
+        nav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', closeMenu);
+        });
+
+        document.addEventListener('keydown', event => {
+          if (event.key === 'Escape') closeMenu();
+        });
+
+        window.addEventListener('resize', () => {
+          if (window.innerWidth > 780) closeMenu();
+        });
+      })();
+    </script>
+
+    <style is:global>
+      .menu-toggle{
+        display:none;
+        width:44px;
+        height:44px;
+        padding:10px;
+        border:1px solid rgba(126,164,200,.26);
+        border-radius:12px;
+        background:rgba(18,42,68,.48);
+        color:inherit;
+        cursor:pointer;
+      }
+
+      .menu-toggle span{
+        display:block;
+        width:100%;
+        height:2px;
+        margin:4px 0;
+        border-radius:99px;
+        background:currentColor;
+        transition:transform .18s ease,opacity .18s ease;
+      }
+
+      @media(max-width:780px){
+        body.nav-open{overflow:hidden}
+
+        .site-header{
+          position:sticky;
+          top:0;
+          z-index:100;
+          backdrop-filter:blur(16px);
+          -webkit-backdrop-filter:blur(16px);
+          background:rgba(7,18,37,.86);
+          border-bottom:1px solid rgba(113,151,190,.14);
+        }
+
+        .header-inner{
+          position:relative;
+          min-height:64px;
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:14px;
+        }
+
+        .brand{
+          font-size:1.25rem;
+          position:relative;
+          z-index:102;
+        }
+
+        .menu-toggle{
+          display:block;
+          position:relative;
+          z-index:102;
+          flex:0 0 auto;
+        }
+
+        .menu-toggle[aria-expanded="true"] span:nth-child(1){
+          transform:translateY(6px) rotate(45deg);
+        }
+
+        .menu-toggle[aria-expanded="true"] span:nth-child(2){
+          opacity:0;
+        }
+
+        .menu-toggle[aria-expanded="true"] span:nth-child(3){
+          transform:translateY(-6px) rotate(-45deg);
+        }
+
+        .main-nav{
+          position:fixed;
+          inset:64px 0 auto;
+          z-index:101;
+          display:grid !important;
+          gap:7px;
+          padding:14px max(16px,calc((100vw - 1120px)/2));
+          max-height:calc(100dvh - 64px);
+          overflow:auto;
+          background:rgba(7,18,37,.98);
+          border-bottom:1px solid rgba(113,151,190,.18);
+          box-shadow:0 22px 45px rgba(0,0,0,.3);
+          transform:translateY(-115%);
+          opacity:0;
+          visibility:hidden;
+          pointer-events:none;
+          transition:transform .2s ease,opacity .2s ease,visibility .2s ease;
+        }
+
+        .main-nav.is-open{
+          transform:translateY(0);
+          opacity:1;
+          visibility:visible;
+          pointer-events:auto;
+        }
+
+        .main-nav a{
+          display:flex;
+          align-items:center;
+          min-height:48px;
+          padding:10px 14px;
+          border-radius:11px;
+          text-decoration:none;
+          font-weight:700;
+        }
+
+        .main-nav a:hover,
+        .main-nav a[aria-current="page"]{
+          background:rgba(66,128,188,.15);
+        }
+
+        .wrap{
+          width:min(100% - 28px,1120px);
+        }
+
+        .section{
+          padding-block:clamp(34px,8vw,58px);
+        }
+
+        .hero{
+          border-radius:20px;
+          overflow:hidden;
+        }
+
+        .hero-content{
+          padding:clamp(20px,6vw,30px);
+        }
+
+        .controls{
+          gap:10px;
+        }
+
+        .controls .btn{
+          min-height:44px;
+        }
+
+        .site-footer .footer-inner{
+          gap:22px;
+        }
+
+        .footer-links{
+          display:flex;
+          flex-wrap:wrap;
+          gap:10px 16px;
+        }
+      }
+
+      @media(max-width:520px){
+        .wrap{
+          width:min(100% - 22px,1120px);
+        }
+
+        .hero{
+          margin-top:18px !important;
+        }
+
+        .hero-content h1{
+          font-size:clamp(2rem,11vw,3rem);
+        }
+
+        .controls{
+          display:grid;
+          grid-template-columns:1fr;
+        }
+
+        .controls .btn{
+          width:100%;
+          text-align:center;
+          justify-content:center;
+        }
+
+        .section-title{
+          line-height:1.3;
+        }
+
+        .site-footer{
+          padding-bottom:max(22px,env(safe-area-inset-bottom));
+        }
+      }
+
+      @media(prefers-reduced-motion:reduce){
+        .menu-toggle span,
+        .main-nav{
+          transition:none;
+        }
+      }
+    </style>
   </body>
 </html>
