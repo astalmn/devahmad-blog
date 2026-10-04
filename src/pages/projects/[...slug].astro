@@ -1,10 +1,520 @@
 ---
-import Base from '../../layouts/Base.astro';import PhoneFrame from '../../components/PhoneFrame.astro';import {getCollection,render} from 'astro:content';import type {CollectionEntry} from 'astro:content';
-export async function getStaticPaths(){return (await getCollection('projects',({data})=>data.lang==='ar')).map(project=>({params:{slug:project.id},props:{project}}));}
-const {project}=Astro.props as {project:CollectionEntry<'projects'>};const {Content}=await render(project);
+import Base from '../../layouts/Base.astro';
+import PhoneFrame from '../../components/PhoneFrame.astro';
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  return (await getCollection('projects', ({ data }) => data.lang === 'ar')).map(project => ({
+    params: { slug: project.id },
+    props: { project }
+  }));
+}
+
+const { project } = Astro.props as { project: CollectionEntry<'projects'> };
+const { Content } = await render(project);
+
 const launchUrl =
-  project.id === 'athkari' ? '/apps/athkari/' :
-  project.id === 'noor-quran' ? '/apps/noor-quran/' :
-  project.data.demo;
+  project.id === 'athkari'
+    ? '/apps/athkari/'
+    : project.id === 'noor-quran'
+      ? '/apps/noor-quran/'
+      : project.data.demo;
+
+const meta =
+  project.id === 'zaka-plus'
+    ? { status: 'قيد التطوير النشط', type: 'ذكاء اصطناعي', icon: 'AI' }
+    : project.id === 'athkari'
+      ? { status: 'جاهز للتجربة', type: 'تطبيق ويب', icon: '☪' }
+      : project.id === 'noor-quran'
+        ? { status: 'جاهز للتجربة', type: 'تطبيق ويب', icon: 'ق' }
+        : { status: 'مشروع', type: 'تطوير ويب', icon: '</>' };
 ---
-<Base title={project.data.title} description={project.data.description}><article class="wrap section"><a href="/projects/" class="muted">→ العودة إلى المشاريع</a><h1 class="section-title" style="margin-top:22px">{project.data.title}</h1><p class="muted">{project.data.description}</p><p>{project.data.stack.map(s=><span class="tag" style="margin:4px">{s}</span>)}</p><div class="prose"><Content/></div>{project.id==='athkari'&&<PhoneFrame src="/apps/athkari/" title="تطبيق أذكاري"/>}{project.id==='noor-quran'&&<PhoneFrame src="/apps/noor-quran/" title="تطبيق نور القرآن"/>}<div class="controls">{launchUrl&&<a class="btn" href={launchUrl} target="_blank" rel="noopener noreferrer">تجربة المشروع</a>}{launchUrl&&<a class="btn secondary" href={launchUrl} target="_blank" rel="noopener noreferrer">فتح المشروع</a>}</div></article></Base>
+
+<Base title={project.data.title} description={project.data.description}>
+  <article class="wrap project-page">
+    <a href="/projects/" class="back-link">→ العودة إلى المشاريع</a>
+
+    <header class="project-hero" data-project={project.id}>
+      <div class="project-hero__content">
+        <div class="project-badges">
+          <span class="project-status">{meta.status}</span>
+          <span class="project-type">{meta.type}</span>
+        </div>
+
+        <h1>{project.data.title}</h1>
+        <p class="project-description">{project.data.description}</p>
+
+        <div class="project-stack" aria-label="تقنيات المشروع">
+          {project.data.stack.map(item => <span>{item}</span>)}
+        </div>
+
+        {launchUrl && (
+          <div class="project-actions">
+            <a
+              class="btn project-launch"
+              href={launchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              تشغيل المشروع
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        )}
+      </div>
+
+      <div class="project-hero__visual" aria-hidden="true">
+        <div class="visual-window">
+          <div class="visual-bar">
+            <i></i><i></i><i></i>
+          </div>
+          <div class="visual-screen">
+            <div class="visual-logo">{meta.icon}</div>
+            <div class="visual-lines">
+              <span></span>
+              <span></span>
+              <span></span>
+              <b></b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="project-layout">
+      <main class="project-content">
+        <div class="prose">
+          <Content />
+        </div>
+
+        {project.id === 'athkari' && (
+          <section class="live-preview" aria-labelledby="athkari-preview-title">
+            <div class="preview-heading">
+              <span class="eyebrow">Live Preview</span>
+              <h2 id="athkari-preview-title">جرّب أذكاري مباشرة</h2>
+              <p class="muted">المعاينة تفاعلية بالكامل داخل إطار الهاتف.</p>
+            </div>
+            <PhoneFrame src="/apps/athkari/" title="تطبيق أذكاري" />
+          </section>
+        )}
+
+        {project.id === 'noor-quran' && (
+          <section class="live-preview" aria-labelledby="noor-preview-title">
+            <div class="preview-heading">
+              <span class="eyebrow">Live Preview</span>
+              <h2 id="noor-preview-title">جرّب نور القرآن مباشرة</h2>
+              <p class="muted">المعاينة تفاعلية بالكامل داخل إطار الهاتف.</p>
+            </div>
+            <PhoneFrame src="/apps/noor-quran/" title="تطبيق نور القرآن" />
+          </section>
+        )}
+      </main>
+
+      <aside class="project-sidebar">
+        <div class="project-info glass">
+          <span class="eyebrow">Project Info</span>
+
+          <div class="info-row">
+            <span>الحالة</span>
+            <strong>{meta.status}</strong>
+          </div>
+
+          <div class="info-row">
+            <span>النوع</span>
+            <strong>{meta.type}</strong>
+          </div>
+
+          <div class="info-row">
+            <span>التقنيات</span>
+            <strong>{project.data.stack.length}</strong>
+          </div>
+
+          {launchUrl && (
+            <a
+              class="btn project-sidebar__cta"
+              href={launchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              تشغيل المشروع
+            </a>
+          )}
+        </div>
+      </aside>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .project-page {
+    padding-block: clamp(30px, 5vw, 68px);
+  }
+
+  .back-link {
+    display: inline-flex;
+    margin-bottom: 22px;
+    color: var(--muted, #9fb0c7);
+    font-size: .92rem;
+  }
+
+  .project-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, .85fr);
+    gap: clamp(28px, 5vw, 58px);
+    align-items: center;
+    padding: clamp(26px, 5vw, 50px);
+    border: 1px solid rgba(94, 158, 211, .25);
+    border-radius: 28px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(55, 198, 255, .16), transparent 34%),
+      linear-gradient(145deg, rgba(12, 31, 56, .96), rgba(7, 20, 39, .98));
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .15);
+  }
+
+  .project-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .project-status,
+  .project-type {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 800;
+  }
+
+  .project-status {
+    color: #8be7ff;
+    border: 1px solid rgba(89, 205, 239, .28);
+    background: rgba(34, 137, 178, .1);
+  }
+
+  .project-type {
+    color: #b9cae0;
+    border: 1px solid rgba(139, 164, 194, .2);
+    background: rgba(79, 101, 130, .12);
+  }
+
+  .project-hero h1 {
+    margin: 0;
+    max-width: 760px;
+    font-size: clamp(2.1rem, 5.7vw, 4.1rem);
+    line-height: 1.15;
+    letter-spacing: -.035em;
+  }
+
+  .project-description {
+    max-width: 760px;
+    margin: 16px 0 20px;
+    color: #a9bfd9;
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    line-height: 1.9;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .project-stack span {
+    padding: 6px 10px;
+    border-radius: 9px;
+    background: rgba(45, 80, 115, .3);
+    color: #c3daef;
+    font-size: .78rem;
+  }
+
+  .project-actions {
+    margin-top: 26px;
+  }
+
+  .project-launch {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 160px;
+    justify-content: center;
+  }
+
+  .project-hero__visual {
+    min-width: 0;
+  }
+
+  .visual-window {
+    border: 1px solid rgba(123, 183, 230, .25);
+    border-radius: 21px;
+    overflow: hidden;
+    background: #091a2f;
+    box-shadow: 0 24px 52px rgba(0, 0, 0, .28);
+    transform: rotate(-2deg);
+  }
+
+  .visual-bar {
+    display: flex;
+    gap: 7px;
+    height: 40px;
+    align-items: center;
+    padding-inline: 14px;
+    background: #0d2039;
+    border-bottom: 1px solid rgba(120, 171, 211, .13);
+  }
+
+  .visual-bar i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #47637e;
+  }
+
+  .visual-screen {
+    min-height: 240px;
+    display: grid;
+    grid-template-columns: 95px 1fr;
+    gap: 26px;
+    align-items: center;
+    padding: 36px;
+  }
+
+  .visual-logo {
+    width: 88px;
+    height: 88px;
+    border-radius: 24px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 1.65rem;
+    font-weight: 900;
+    background: linear-gradient(145deg, #1676dd, #35d4ef);
+    box-shadow: 0 13px 34px rgba(31, 160, 224, .27);
+  }
+
+  .visual-lines {
+    display: grid;
+    gap: 12px;
+  }
+
+  .visual-lines span,
+  .visual-lines b {
+    display: block;
+    border-radius: 999px;
+    height: 9px;
+    background: #294a68;
+  }
+
+  .visual-lines span:nth-child(1) {
+    width: 75%;
+    background: #3a7098;
+  }
+
+  .visual-lines span:nth-child(2) { width: 96%; }
+  .visual-lines span:nth-child(3) { width: 62%; }
+
+  .visual-lines b {
+    width: 46%;
+    height: 29px;
+    margin-top: 8px;
+    background: linear-gradient(90deg, #126ed4, #27c6e7);
+  }
+
+  [data-project="athkari"] .visual-logo {
+    background: linear-gradient(145deg, #168a60, #0a513b);
+  }
+
+  [data-project="athkari"] .visual-lines b {
+    background: linear-gradient(90deg, #126447, #24a476);
+  }
+
+  [data-project="noor-quran"] .visual-logo {
+    background: linear-gradient(145deg, #2c765e, #b7954b);
+  }
+
+  [data-project="noor-quran"] .visual-lines b {
+    background: linear-gradient(90deg, #2c765e, #b7954b);
+  }
+
+  .project-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 36px;
+    align-items: start;
+    margin-top: 42px;
+  }
+
+  .project-content {
+    min-width: 0;
+  }
+
+  .project-sidebar {
+    position: sticky;
+    top: 92px;
+  }
+
+  .project-info {
+    padding: 20px;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(107, 143, 179, .18);
+    font-size: .87rem;
+  }
+
+  .info-row span {
+    color: var(--muted, #9fb0c7);
+  }
+
+  .info-row strong {
+    text-align: end;
+  }
+
+  .project-sidebar__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+    width: 100%;
+  }
+
+  .live-preview {
+    margin-top: 56px;
+    padding-top: 36px;
+    border-top: 1px solid rgba(111, 151, 190, .2);
+  }
+
+  .preview-heading {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .preview-heading h2 {
+    margin: .4rem 0 .35rem;
+    font-size: clamp(1.6rem, 4vw, 2.3rem);
+  }
+
+  .preview-heading p {
+    margin: 0;
+  }
+
+  :global(html[data-theme="light"]) .project-hero {
+    border-color: #d7e3ee;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(73, 196, 234, .13), transparent 34%),
+      linear-gradient(145deg, #fff, #f4f8fc);
+    box-shadow: 0 18px 50px rgba(46, 81, 116, .08);
+  }
+
+  :global(html[data-theme="light"]) .project-description {
+    color: #60738a;
+  }
+
+  :global(html[data-theme="light"]) .project-stack span {
+    background: #edf4f9;
+    color: #405e79;
+  }
+
+  @media (max-width: 920px) {
+    .project-hero {
+      grid-template-columns: 1fr;
+    }
+
+    .project-hero__visual {
+      max-width: 620px;
+      width: 100%;
+      margin-inline: auto;
+    }
+
+    .project-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .project-sidebar {
+      position: static;
+      order: -1;
+    }
+
+    .project-info {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .project-info > .eyebrow {
+      grid-column: 1 / -1;
+    }
+
+    .info-row {
+      display: block;
+      border: 1px solid rgba(107, 143, 179, .17);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .info-row span,
+    .info-row strong {
+      display: block;
+      text-align: start;
+    }
+
+    .info-row strong {
+      margin-top: 5px;
+    }
+
+    .project-sidebar__cta {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .project-page {
+      padding-top: 24px;
+    }
+
+    .project-hero {
+      padding: 22px;
+      border-radius: 22px;
+    }
+
+    .visual-screen {
+      min-height: 180px;
+      grid-template-columns: 68px 1fr;
+      gap: 18px;
+      padding: 24px;
+    }
+
+    .visual-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 19px;
+      font-size: 1.25rem;
+    }
+
+    .project-info {
+      grid-template-columns: 1fr;
+    }
+
+    .project-actions .btn {
+      width: 100%;
+    }
+
+    .project-layout {
+      margin-top: 28px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .visual-window {
+      transform: none;
+    }
+  }
+</style>
