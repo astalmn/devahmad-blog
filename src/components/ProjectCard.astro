@@ -1,0 +1,265 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  featured?: boolean;
+}
+
+const { project, featured = false } = Astro.props;
+const id = project.id;
+
+const meta =
+  id === 'zaka-plus'
+    ? { status: 'قيد التطوير', kind: 'ذكاء اصطناعي', icon: 'AI' }
+    : id === 'athkari'
+      ? { status: 'جاهز للتجربة', kind: 'تطبيق ويب', icon: '☪' }
+      : id === 'noor-quran'
+        ? { status: 'جاهز للتجربة', kind: 'تطبيق ويب', icon: 'ق' }
+        : { status: 'مشروع', kind: 'تطوير ويب', icon: '</>' };
+
+const stack = project.data.stack.slice(0, 4);
+---
+
+<article
+  class:list={['project-card', featured && 'project-card--featured']}
+  data-project={id}
+>
+  <a class="project-card__link" href={`/projects/${id}/`} aria-label={`عرض مشروع ${project.data.title}`}>
+    <div class="project-card__visual" aria-hidden="true">
+      <div class="project-card__browser">
+        <div class="project-card__bar">
+          <i></i><i></i><i></i>
+          <span>{meta.kind}</span>
+        </div>
+
+        <div class="project-card__screen">
+          <div class="project-card__brand">{meta.icon}</div>
+          <div class="project-card__mock">
+            <span></span>
+            <span></span>
+            <span></span>
+            <b></b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card__body">
+      <div class="project-card__meta">
+        <span class="project-card__status">{meta.status}</span>
+        <span class="project-card__kind">{meta.kind}</span>
+      </div>
+
+      <h2>{project.data.title}</h2>
+      <p>{project.data.description}</p>
+
+      <div class="project-card__stack">
+        {stack.map(item => <span>{item}</span>)}
+      </div>
+
+      <span class="project-card__cta">
+        عرض المشروع
+        <span aria-hidden="true">←</span>
+      </span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .project-card{
+    min-width:0;
+    border:1px solid rgba(88,153,211,.28);
+    border-radius:22px;
+    overflow:hidden;
+    background:linear-gradient(145deg,rgba(13,32,58,.94),rgba(8,23,43,.96));
+    box-shadow:0 18px 48px rgba(0,0,0,.14);
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+  }
+  .project-card:hover{
+    transform:translateY(-5px);
+    border-color:rgba(91,214,255,.58);
+    box-shadow:0 24px 58px rgba(0,0,0,.22);
+  }
+  .project-card__link{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    color:inherit;
+  }
+  .project-card__visual{
+    padding:18px 18px 0;
+    min-height:188px;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 80% 15%,rgba(59,203,255,.19),transparent 38%),
+      linear-gradient(135deg,rgba(39,96,157,.2),rgba(17,45,83,.03));
+  }
+  .project-card__browser{
+    max-width:380px;
+    margin:auto;
+    border:1px solid rgba(126,185,231,.28);
+    border-radius:17px 17px 0 0;
+    overflow:hidden;
+    background:#09182c;
+    box-shadow:0 17px 36px rgba(0,0,0,.24);
+    transform:translateY(8px);
+  }
+  .project-card__bar{
+    height:34px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:0 11px;
+    border-bottom:1px solid rgba(126,185,231,.16);
+    background:#0d2038;
+  }
+  .project-card__bar i{
+    width:7px;height:7px;border-radius:50%;
+    background:#46627f;
+  }
+  .project-card__bar span{
+    margin-inline-start:auto;
+    font-size:.68rem;
+    color:#91a9c2;
+  }
+  .project-card__screen{
+    min-height:140px;
+    padding:23px;
+    display:grid;
+    grid-template-columns:72px 1fr;
+    align-items:center;
+    gap:20px;
+  }
+  .project-card__brand{
+    width:68px;height:68px;
+    display:grid;place-items:center;
+    border-radius:20px;
+    font-weight:900;
+    font-size:1.35rem;
+    letter-spacing:-.04em;
+    background:linear-gradient(145deg,#1372d9,#35d5ee);
+    color:white;
+    box-shadow:0 10px 28px rgba(34,160,226,.28);
+  }
+  .project-card__mock{display:grid;gap:9px}
+  .project-card__mock span,
+  .project-card__mock b{
+    display:block;
+    height:8px;
+    border-radius:99px;
+    background:#294761;
+  }
+  .project-card__mock span:nth-child(1){width:78%;background:#3a6c91}
+  .project-card__mock span:nth-child(2){width:96%}
+  .project-card__mock span:nth-child(3){width:64%}
+  .project-card__mock b{
+    width:45%;
+    height:24px;
+    margin-top:5px;
+    background:linear-gradient(90deg,#1469cb,#2ac4e7);
+  }
+
+  [data-project="athkari"] .project-card__visual{
+    background:radial-gradient(circle at 78% 15%,rgba(40,173,116,.21),transparent 40%),linear-gradient(135deg,rgba(24,113,76,.25),rgba(10,38,32,.05));
+  }
+  [data-project="athkari"] .project-card__brand{
+    background:linear-gradient(145deg,#168a60,#0a513b);
+    box-shadow:0 10px 28px rgba(24,148,101,.24);
+  }
+  [data-project="athkari"] .project-card__mock b{background:linear-gradient(90deg,#126447,#24a476)}
+
+  [data-project="noor-quran"] .project-card__visual{
+    background:radial-gradient(circle at 78% 15%,rgba(213,173,82,.18),transparent 40%),linear-gradient(135deg,rgba(43,104,83,.23),rgba(16,43,38,.04));
+  }
+  [data-project="noor-quran"] .project-card__brand{
+    background:linear-gradient(145deg,#2c765e,#b7954b);
+    box-shadow:0 10px 28px rgba(183,149,75,.22);
+  }
+  [data-project="noor-quran"] .project-card__mock b{background:linear-gradient(90deg,#2c765e,#b7954b)}
+
+  .project-card__body{
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+  }
+  .project-card__meta{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .project-card__status,
+  .project-card__kind{
+    font-size:.76rem;
+    font-weight:800;
+  }
+  .project-card__status{
+    color:#88e8ff;
+    border:1px solid rgba(82,203,238,.3);
+    border-radius:999px;
+    padding:3px 9px;
+  }
+  .project-card__kind{color:#91a9c2}
+  .project-card h2{
+    margin:0;
+    font-size:1.27rem;
+    line-height:1.55;
+  }
+  .project-card p{
+    margin:9px 0 18px;
+    color:#a9bed9;
+    font-size:.93rem;
+    line-height:1.85;
+    flex:1;
+  }
+  .project-card__stack{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-bottom:20px;
+  }
+  .project-card__stack span{
+    padding:4px 9px;
+    border-radius:8px;
+    background:rgba(54,91,129,.22);
+    color:#b9d6f0;
+    font-size:.72rem;
+  }
+  .project-card__cta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding-top:15px;
+    border-top:1px solid rgba(91,127,163,.22);
+    color:#66d9ff;
+    font-weight:800;
+  }
+
+  .project-card--featured .project-card__visual{min-height:220px}
+
+  :global(html[data-theme="light"]) .project-card{
+    background:#fff;
+    border-color:#d7e2ee;
+    box-shadow:0 14px 38px rgba(37,68,104,.09);
+  }
+  :global(html[data-theme="light"]) .project-card:hover{border-color:#8bcde7}
+  :global(html[data-theme="light"]) .project-card__body p{color:#61738a}
+  :global(html[data-theme="light"]) .project-card__kind{color:#65778d}
+  :global(html[data-theme="light"]) .project-card__stack span{background:#edf4f9;color:#3f5b74}
+  :global(html[data-theme="light"]) .project-card__cta{border-color:#e2eaf2}
+
+  @media(max-width:580px){
+    .project-card__visual{min-height:168px;padding:14px 14px 0}
+    .project-card__screen{min-height:122px;padding:18px;grid-template-columns:58px 1fr;gap:15px}
+    .project-card__brand{width:56px;height:56px;border-radius:17px;font-size:1.1rem}
+    .project-card__body{padding:19px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .project-card{transition:none}
+    .project-card:hover{transform:none}
+  }
+</style>
