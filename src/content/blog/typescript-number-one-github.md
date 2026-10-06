@@ -5,8 +5,7 @@ date: 2026-10-06
 category: "تقنيات الويب"
 tags: ["TypeScript", "JavaScript", "GitHub", "Web Development"]
 lang: ar
-draft: true
-scheduledAt: "2026-10-06T07:00:00Z"
+draft: false
 ---
 في بيانات GitHub Octoverse لعام 2025، تجاوزت <span class="text-accent">TypeScript</span> كلًا من <span class="text-accent">Python وJavaScript</span> في عدد المساهمين على GitHub خلال أغسطس 2025. هذه نتيجة مرتبطة بمنهجية GitHub وليست حكمًا بأن TypeScript هي «أفضل لغة» لكل استخدام.
 
