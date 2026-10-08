@@ -146,16 +146,6 @@ const meta =
             <strong>{project.data.stack.length}</strong>
           </div>
 
-          {launchUrl && (
-            <a
-              class="btn project-sidebar__cta"
-              href={launchUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              تشغيل المشروع
-            </a>
-          )}
         </div>
       </aside>
     </div>
@@ -395,13 +385,6 @@ const meta =
     text-align: end;
   }
 
-  .project-sidebar__cta {
-    display: flex;
-    justify-content: center;
-    margin-top: 18px;
-    width: 100%;
-  }
-
   .live-preview {
     margin-top: 56px;
     padding-top: 36px;
@@ -486,9 +469,6 @@ const meta =
       margin-top: 5px;
     }
 
-    .project-sidebar__cta {
-      grid-column: 1 / -1;
-    }
   }
 
   @media (max-width: 600px) {
