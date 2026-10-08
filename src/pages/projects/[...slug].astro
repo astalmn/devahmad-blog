@@ -21,6 +21,17 @@ const launchUrl =
       ? '/apps/noor-quran/'
       : project.data.demo;
 
+const projectImage =
+  project.id === 'zaka-plus'
+    ? '/assets/projects/zaka-plus-og.png'
+    : project.id === 'athkari'
+      ? '/assets/projects/athkari-og.png'
+      : project.id === 'noor-quran'
+        ? '/assets/projects/noor-quran-og.png'
+        : '/assets/cover.png';
+
+const projectImageAlt = `${project.data.title} — DevAhmad`;
+
 const meta =
   project.id === 'zaka-plus'
     ? { status: 'قيد التطوير النشط', type: 'ذكاء اصطناعي', icon: 'AI' }
@@ -31,7 +42,12 @@ const meta =
         : { status: 'مشروع', type: 'تطوير ويب', icon: '</>' };
 ---
 
-<Base title={project.data.title} description={project.data.description}>
+<Base
+  title={project.data.title}
+  description={project.data.description}
+  image={projectImage}
+  imageAlt={projectImageAlt}
+>
   <article class="wrap project-page">
     <a href="/projects/" class="back-link">→ العودة إلى المشاريع</a>
 
