@@ -3,35 +3,48 @@ import Base from '../../layouts/Base.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 
-const projects = await getCollection('projects', ({ data }) => data.lang === 'ar');
+const allProjects = await getCollection('projects', ({ data }) => data.lang === 'ar');
+
+const preferredOrder = ['zaka-plus', 'athkari', 'noor-quran'];
+
+const projects = [...allProjects].sort((a, b) => {
+  const aIndex = preferredOrder.indexOf(a.id);
+  const bIndex = preferredOrder.indexOf(b.id);
+
+  if (aIndex !== -1 && bIndex !== -1) return aIndex - bIndex;
+  if (aIndex !== -1) return -1;
+  if (bIndex !== -1) return 1;
+
+  return a.data.title.localeCompare(b.data.title, 'ar');
+});
 
 function groupsFor(project: (typeof projects)[number]) {
-  const groups = ['all'];
+  const groups = new Set(['all', 'web']);
   const text = `${project.id} ${project.data.title} ${project.data.description} ${project.data.stack.join(' ')}`.toLowerCase();
 
   if (
     project.id === 'zaka-plus' ||
-    /ai|ذكاء|artificial intelligence|llm|supabase/.test(text)
-  ) groups.push('ai');
-
-  if (
-    project.id === 'athkari' ||
-    project.id === 'noor-quran' ||
-    /html|css|javascript|typescript|react|astro|vite|web|ويب/.test(text)
-  ) groups.push('web');
-
-  if (
-    project.id === 'athkari' ||
-    project.id === 'noor-quran' ||
-    /tool|tools|أداة|أدوات|مسبحة|بحث|مولد/.test(text)
-  ) groups.push('tools');
-
-  if (/قيد التطوير|تجريب|experimental|prototype/.test(text)) {
-    groups.push('experimental');
+    /workers ai|ذكاء اصطناعي|artificial intelligence|\bai\b|\bllm\b/.test(text)
+  ) {
+    groups.add('ai');
   }
 
-  return [...new Set(groups)].join(' ');
+  if (
+    ['zaka-plus', 'athkari', 'noor-quran'].includes(project.id) ||
+    /tool|tools|أداة|أدوات|مسبحة|بحث|مولد|ترجمة|تلخيص/.test(text)
+  ) {
+    groups.add('tools');
+  }
+
+  return [...groups].join(' ');
 }
+
+const counts = {
+  all: projects.length,
+  web: projects.filter(project => groupsFor(project).split(/\s+/).includes('web')).length,
+  ai: projects.filter(project => groupsFor(project).split(/\s+/).includes('ai')).length,
+  tools: projects.filter(project => groupsFor(project).split(/\s+/).includes('tools')).length
+};
 ---
 
 <Base
@@ -49,11 +62,18 @@ function groupsFor(project: (typeof projects)[number]) {
     </header>
 
     <div class="project-filters" role="toolbar" aria-label="تصفية المشاريع">
-      <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true">الكل</button>
-      <button class="filter-btn" type="button" data-filter="web" aria-pressed="false">تطبيقات ويب</button>
-      <button class="filter-btn" type="button" data-filter="ai" aria-pressed="false">ذكاء اصطناعي</button>
-      <button class="filter-btn" type="button" data-filter="tools" aria-pressed="false">أدوات</button>
-      <button class="filter-btn" type="button" data-filter="experimental" aria-pressed="false">مشاريع تجريبية</button>
+      <button class="filter-btn active" type="button" data-filter="all" aria-pressed="true">
+        الكل <span>{counts.all}</span>
+      </button>
+      <button class="filter-btn" type="button" data-filter="web" aria-pressed="false">
+        تطبيقات ويب <span>{counts.web}</span>
+      </button>
+      <button class="filter-btn" type="button" data-filter="ai" aria-pressed="false">
+        ذكاء اصطناعي <span>{counts.ai}</span>
+      </button>
+      <button class="filter-btn" type="button" data-filter="tools" aria-pressed="false">
+        أدوات <span>{counts.tools}</span>
+      </button>
     </div>
 
     <div class="projects-grid" id="projects-grid">
@@ -163,11 +183,28 @@ function groupsFor(project: (typeof projects)[number]) {
     border-color:rgba(91,211,255,.58);
   }
 
+  .filter-btn span{
+    display:inline-grid;
+    place-items:center;
+    min-width:1.55rem;
+    height:1.55rem;
+    margin-inline-start:.35rem;
+    padding-inline:.32rem;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    font-size:.74rem;
+    line-height:1;
+  }
+
   .filter-btn.active{
     color:#04131f;
     border-color:transparent;
     background:linear-gradient(135deg,#71e2ff,#3cb7ff);
     box-shadow:0 8px 24px rgba(55,183,238,.22);
+  }
+
+  .filter-btn.active span{
+    background:rgba(4,19,31,.12);
   }
 
   .projects-grid{
