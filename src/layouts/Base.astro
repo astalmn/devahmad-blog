@@ -22,7 +22,7 @@ const {
 
 const canonical = new URL(
   Astro.url.pathname,
-  Astro.site ?? 'https://devahmad-blog.pages.dev'
+  Astro.site ?? 'https://devahmad.pages.dev'
 );
 
 const og = new URL(image, canonical);
@@ -36,6 +36,11 @@ const nav = [
   { href: '/resources/', text: labels.resources },
   { href: '/contact/', text: labels.contact }
 ];
+
+const isActiveNav = (href: string) =>
+  href === '/'
+    ? Astro.url.pathname === '/'
+    : Astro.url.pathname.startsWith(href);
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -136,7 +141,7 @@ const personSchema = {
           {nav.map(item => (
             <a
               href={item.href}
-              aria-current={Astro.url.pathname === item.href ? 'page' : undefined}
+              aria-current={isActiveNav(item.href) ? 'page' : undefined}
             >
               {item.text}
             </a>
