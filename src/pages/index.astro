@@ -9,10 +9,14 @@ const latest = (await posts()).slice(0, 3);
 const allProjects = await getCollection('projects', ({ data }) => data.lang === 'ar');
 
 const preferred = ['zaka-plus', 'athkari', 'noor-quran'];
+type Project = (typeof allProjects)[number];
+
+const featuredProjects = preferred
+  .map(id => allProjects.find(project => project.id === id))
+  .filter((project): project is Project => Boolean(project));
+
 const projects = [
-  ...preferred
-    .map(id => allProjects.find(project => project.id === id))
-    .filter(Boolean),
+  ...featuredProjects,
   ...allProjects.filter(project => !preferred.includes(project.id))
 ].slice(0, 3);
 ---
@@ -53,29 +57,29 @@ const projects = [
       </div>
 
       <div class="activity-grid">
-        <article class="glass activity-card">
+        <a class="glass activity-card" href="/projects/noor-quran/">
           <span class="activity-dot"></span>
           <div>
             <strong>نور القرآن</strong>
             <p>إضافة التطبيق إلى المعرض مع معاينة تفاعلية داخل إطار هاتف.</p>
           </div>
-        </article>
+        </a>
 
-        <article class="glass activity-card">
+        <a class="glass activity-card" href="/projects/athkari/">
           <span class="activity-dot"></span>
           <div>
             <strong>أذكاري</strong>
             <p>إتاحة نسخة قابلة للتجربة مباشرة مع المسبحة والمفضلة والتقدم اليومي.</p>
           </div>
-        </article>
+        </a>
 
-        <article class="glass activity-card">
+        <a class="glass activity-card" href="/projects/zaka-plus/">
           <span class="activity-dot activity-dot--active"></span>
           <div>
             <strong>ذكاء بلس</strong>
             <p>تطوير تجربة محادثة موحدة وأدوات ذكاء اصطناعي ضمن واجهة واحدة.</p>
           </div>
-        </article>
+        </a>
       </div>
     </section>
 
@@ -190,6 +194,14 @@ const projects = [
     gap:14px;
     align-items:flex-start;
     padding:20px;
+    color:inherit;
+    text-decoration:none;
+    transition:transform .18s ease,border-color .18s ease;
+  }
+
+  .activity-card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(91,211,255,.42);
   }
 
   .activity-card strong{
@@ -298,6 +310,11 @@ const projects = [
     .skills-block{
       grid-template-columns:1fr;
     }
+  }
+
+  @media(prefers-reduced-motion:reduce){
+    .activity-card{transition:none}
+    .activity-card:hover{transform:none}
   }
 
   @media(max-width:680px){
