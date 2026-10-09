@@ -22,11 +22,20 @@ const {
 
 const canonical = new URL(
   Astro.url.pathname,
-  Astro.site ?? 'https://devahmad.pages.dev'
+  import.meta.env.PUBLIC_SITE_URL || Astro.site || 'https://devahmad-blog.pages.dev'
 );
 
 const og = new URL(image, canonical);
-const pageTitle = title === site.name ? site.name : `${title} | ${site.name}`;
+const pageTitle = title === site.name
+  ? (Astro.url.pathname === '/' ? site.name + ' | البرمجة والذكاء الاصطناعي' : site.name)
+  : title + ' | ' + site.name;
+const googleSiteVerification =
+  import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION?.trim() ||
+  '1obNpkIltctGoXTvxEC69HioA45xUWwi6Ql67Hixnz4';
+const websiteSchemaId = new URL('/#website', canonical).href;
+const personSchemaId = new URL('/#person', canonical).href;
+const serializeSchema = (value: unknown) =>
+  JSON.stringify(value).replace(/</g, '\\u003c');
 
 const nav = [
   { href: '/', text: labels.home },
@@ -45,8 +54,10 @@ const isActiveNav = (href: string) =>
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
+  '@id': websiteSchemaId,
   name: 'DevAhmad',
-  url: canonical.origin,
+  alternateName: ['ديف أحمد', 'ديف احمد'],
+  url: new URL('/', canonical).href,
   inLanguage: 'ar',
   description: 'مقالات ومشاريع في البرمجة والذكاء الاصطناعي والأنظمة الذكية.'
 };
@@ -54,11 +65,23 @@ const websiteSchema = {
 const personSchema = {
   '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': personSchemaId,
   name: 'Ahmad',
   alternateName: 'DevAhmad',
   url: canonical.origin,
   jobTitle: 'Programmer | Intelligent Systems Engineer',
   sameAs: [site.github].filter(Boolean)
+};
+
+const webpageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': canonical.href + '#webpage',
+  url: canonical.href,
+  name: pageTitle,
+  description,
+  inLanguage: 'ar',
+  isPartOf: { '@id': websiteSchemaId }
 };
 ---
 
@@ -72,6 +95,9 @@ const personSchema = {
 
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
+    {googleSiteVerification && (
+      <meta name="google-site-verification" content={googleSiteVerification} />
+    )}
     <meta name="theme-color" content="#071225" />
     <meta name="color-scheme" content="dark light" />
 
@@ -110,11 +136,15 @@ const personSchema = {
 
     <script
       type="application/ld+json"
-      set:html={JSON.stringify(websiteSchema)}
+      set:html={serializeSchema(websiteSchema)}
     ></script>
     <script
       type="application/ld+json"
-      set:html={JSON.stringify(personSchema)}
+      set:html={serializeSchema(personSchema)}
+    ></script>
+    <script
+      type="application/ld+json"
+      set:html={serializeSchema(webpageSchema)}
     ></script>
   </head>
 
