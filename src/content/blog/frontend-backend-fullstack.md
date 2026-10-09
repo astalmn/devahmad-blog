@@ -5,8 +5,7 @@ date: 2026-10-09
 category: "مسارات البرمجة"
 tags: ["Frontend", "Backend", "Full Stack", "Web Development"]
 lang: ar
-draft: true
-scheduledAt: "2026-10-09T07:00:00Z"
+draft: false
 ---
 هذه المصطلحات تصف <mark class="text-highlight">مكان مسؤوليتك داخل تطبيق الويب</mark>، لا مستوى المطور. يمكن أن يكون مطور <span class="text-accent">Frontend</span> متخصصًا أعمق من مطور <span class="text-warning">Full-Stack</span> والعكس صحيح.
 
