@@ -5,8 +5,7 @@ date: 2026-10-15
 category: "مشاريع برمجية"
 tags: ["Portfolio", "مشاريع برمجية", "GitHub", "مطورين"]
 lang: ar
-draft: true
-scheduledAt: "2026-10-15T07:00:00Z"
+draft: false
 ---
 الـ<span class="text-accent">Portfolio</span> الجيد لا يقيس عدد المستودعات. يقيس قدرتك على <mark class="text-highlight">تحويل مشكلة إلى منتج يمكن تشغيله وفهم قراراته</mark>.
 
