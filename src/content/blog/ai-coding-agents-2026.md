@@ -5,8 +5,7 @@ date: 2026-10-18
 category: "الذكاء الاصطناعي"
 tags: ["AI Agents", "Coding Agents", "AI", "Software Engineering"]
 lang: ar
-draft: true
-scheduledAt: "2026-10-18T07:00:00Z"
+draft: false
 ---
 مساعد الكود يقترح سطرًا أو يجيب عن سؤال. <span class="text-accent">Coding Agent</span> يستطيع عادة التعامل مع مهمة متعددة الخطوات: قراءة ملفات، اقتراح خطة، تعديل أجزاء مترابطة، تشغيل أدوات أو اختبارات، ثم تقديم نتيجة للمراجعة.
 
