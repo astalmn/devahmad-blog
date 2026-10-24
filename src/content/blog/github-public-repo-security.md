@@ -5,8 +5,7 @@ date: 2026-10-24
 category: "الأمن البرمجي"
 tags: ["GitHub", "Security", "Git", "Open Source"]
 lang: ar
-draft: true
-scheduledAt: "2026-10-24T07:00:00Z"
+draft: false
 ---
 تحويل المستودع إلى <span class="text-accent">Public</span> ليس مجرد تغيير Visibility. أنت تنشر الكود الحالي، وقد تكشف أيضًا معلومات في التاريخ أو الإعدادات أو ملفات البناء.
 
